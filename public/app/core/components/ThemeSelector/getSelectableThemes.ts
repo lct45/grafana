@@ -7,6 +7,7 @@ export function getSelectableThemes() {
     'deut_prot_light',
     'tritanopia_dark',
     'tritanopia_light',
+    'cottoncandy',
     'desertbloom',
     'gildedgrove',
     'sapphiredusk',

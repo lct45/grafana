@@ -7,6 +7,7 @@ var themes = []ThemeDTO{
 	{ID: "dark", Type: "dark"},
 	{ID: "system", Type: "dark"},
 	{ID: "aubergine", Type: "dark", IsExtra: true},
+	{ID: "cottoncandy", Type: "light", IsExtra: true},
 	{ID: "debug", Type: "dark", IsExtra: true},
 	{ID: "desertbloom", Type: "light", IsExtra: true},
 	{ID: "deut_prot_dark", Type: "dark", IsExtra: true},
