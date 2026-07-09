@@ -1,6 +1,6 @@
 ---
 name: dev-server-hot-reload
-description: Start Grafana development servers with hot reloading for both backend and frontend. Use when the user wants to run the dev server, start development with hot reload, or build the app with live reloading enabled.
+description: Start Grafana development servers with hot reloading for both backend and frontend. Use when validating UI or UX changes, when the user wants to run the dev server, or when starting development with hot reload.
 ---
 
 # Development Server with Hot Reloading
@@ -20,6 +20,9 @@ Both processes should run simultaneously in separate terminal sessions. The back
 
 ## Notes
 
-- Do not run these commands unless explicitly requested by the user
+- Run these commands as part of full validation for UI, theme, or UX changes (see **Validation requirements** in `AGENTS.md`)
+- Also run when the user asks to start the dev server
 - Both commands run indefinitely until stopped (Ctrl+C)
 - Ensure dependencies are installed (`make deps`) before starting
+- Wait for readiness before browser validation: backend should log `HTTP Server Listen`, frontend should log `Compiled successfully`
+- Smoke check: `curl -I http://localhost:3000/` should return `HTTP/1.1 302` to `/login`
