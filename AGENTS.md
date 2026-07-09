@@ -32,6 +32,23 @@ Grafana is a monitoring and observability platform. Go backend, TypeScript/React
 
 Before running `git push`, stop and get explicit human approval. When changes are ready, show a summary of changes and wait for instruction. "Open a PR" in a task description is intent, not permission to push without review.
 
+## Validation requirements
+
+For any change that affects UI, themes, or other user-visible behavior, agents MUST complete full validation before marking the task done or opening a PR:
+
+1. Run targeted automated tests (unit, schema, lint as applicable)
+2. Start the dev environment (`make run` + `yarn start`) if not already running
+3. Verify the change in the running app at `http://localhost:3000` (default login: `admin`/`admin`)
+4. Record a screen demo with `RecordScreen` and include it in the summary or PR
+
+Schema and unit tests alone are not sufficient for visual or UX changes.
+
+| Change type | Required validation |
+| ----------- | ------------------- |
+| Theme, component, page, styling | Tests + dev server + browser verification + screen recording |
+| Backend-only API or logic | Targeted `go test` (and lint if applicable) |
+| Shared package with no UI surface | Unit tests + typecheck |
+
 ## Commands
 
 ### Build & Run
