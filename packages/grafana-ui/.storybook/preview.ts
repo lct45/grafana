@@ -37,6 +37,7 @@ const allowedExtraThemes: string[] = ['deut_prot_dark', 'deut_prot_light', 'trit
 
 if (process.env.NODE_ENV === 'development') {
   allowedExtraThemes.push('debug');
+  allowedExtraThemes.push('cottoncandy');
   allowedExtraThemes.push('desertbloom');
   allowedExtraThemes.push('gildedgrove');
   allowedExtraThemes.push('gloom');
