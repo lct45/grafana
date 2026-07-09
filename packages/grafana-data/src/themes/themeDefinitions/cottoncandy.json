@@ -1,0 +1,82 @@
+{
+  "name": "Cotton candy",
+  "id": "cottoncandy",
+  "colors": {
+    "mode": "light",
+    "border": {
+      "weak": "rgba(255, 105, 180, 0.12)",
+      "medium": "rgba(255, 105, 180, 0.20)",
+      "strong": "rgba(255, 105, 180, 0.30)"
+    },
+    "text": {
+      "primary": "#4A4A6A",
+      "secondary": "#6B6B8A",
+      "disabled": "rgba(74, 74, 106, 0.5)",
+      "link": "#FF69B4",
+      "maxContrast": "#000000"
+    },
+    "primary": {
+      "main": "#FF69B4",
+      "text": "#FF69B4",
+      "border": "#E8529F",
+      "name": "primary",
+      "shade": "#E8529F",
+      "transparent": "#FF69B426",
+      "contrastText": "#FFFFFF",
+      "borderTransparent": "#FF69B440"
+    },
+    "secondary": {
+      "main": "#FFFFFF",
+      "text": "#5B8DEF",
+      "border": "#B8D4F0",
+      "name": "secondary",
+      "shade": "#B8D4F0",
+      "transparent": "#FFFFFF26",
+      "contrastText": "#3A5A9E",
+      "borderTransparent": "#FFFFFF40"
+    },
+    "accent": {
+      "main": "#87CEEB",
+      "text": "#5B8DEF",
+      "border": "#6BB8E8",
+      "name": "accent",
+      "shade": "#6BB8E8",
+      "transparent": "#87CEEB26",
+      "contrastText": "#FFFFFF",
+      "borderTransparent": "#87CEEB40"
+    },
+    "info": {
+      "main": "#5B8DEF"
+    },
+    "success": {
+      "main": "#4CAF50"
+    },
+    "warning": {
+      "main": "#FFB6C1"
+    },
+    "background": {
+      "canvas": "#F0F8FF",
+      "page": "#FFF0F8",
+      "primary": "#FFFFFF",
+      "secondary": "#E8F4FD",
+      "elevated": "#FFFFFF"
+    },
+    "action": {
+      "hover": "rgba(135, 206, 235, 0.16)",
+      "selected": "rgba(255, 105, 180, 0.12)",
+      "selectedBorder": "#FF69B4",
+      "focus": "rgba(135, 206, 235, 0.24)",
+      "hoverOpacity": 0.08,
+      "disabledText": "rgba(74, 74, 106, 0.5)",
+      "disabledBackground": "rgba(255, 105, 180, 0.06)",
+      "disabledOpacity": 0.38
+    },
+    "gradients": {
+      "brandHorizontal": "linear-gradient(270deg, #FF69B4 0%, #87CEEB 100%)",
+      "brandVertical": "linear-gradient(0deg, #FF69B4 0%, #87CEEB 100%)"
+    },
+    "contrastThreshold": 3,
+    "hoverFactor": 0.03,
+    "tonalOffset": 0.15
+  }
+}
