@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"log/slog"
 	"runtime/debug"
 	"time"
 
@@ -268,8 +267,7 @@ func copyData(field *data.Field, col arrow.Array) error {
 	case arrow.DURATION:
 		copyBasic[int64](field, array.NewInt64Data(colData))
 	default:
-		// FIXME: Should this return an error instead?
-		slog.Error("datatype is unhandled", "type", col.DataType().ID())
+		return fmt.Errorf("unhandled arrow datatype %s for field %q", col.DataType(), field.Name)
 	}
 
 	return nil

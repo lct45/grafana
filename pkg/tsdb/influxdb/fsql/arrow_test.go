@@ -1,6 +1,7 @@
 package fsql
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"strings"
@@ -467,6 +468,16 @@ func TestCopyData_Float64(t *testing.T) {
 	assert.Equal(t, float64(1.1), *field.CopyAt(0).(*float64))
 	assert.Equal(t, (*float64)(nil), field.CopyAt(1))
 	assert.Equal(t, float64(3.3), *field.CopyAt(2).(*float64))
+}
+
+func TestCopyData_UnsupportedType(t *testing.T) {
+	field := data.NewField("date", nil, []json.RawMessage{})
+	builder := array.NewDate32Builder(memory.DefaultAllocator)
+	builder.Append(arrow.Date32(0))
+	err := copyData(field, builder.NewArray())
+	assert.Error(t, err)
+	assert.Contains(t, err.Error(), "unhandled arrow datatype")
+	assert.Contains(t, err.Error(), "date")
 }
 
 func TestCopyData_StringView(t *testing.T) {
