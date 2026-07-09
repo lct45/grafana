@@ -5,6 +5,7 @@ import userEvent from '@testing-library/user-event';
 import { getPortalContainer, PortalContainer } from '../Portal/Portal';
 
 import { Modal } from './Modal';
+import { ModalTabsHeader } from './ModalTabsHeader';
 
 describe('Modal', () => {
   it('renders nothing by default or when isOpen is false', () => {
@@ -132,6 +133,74 @@ describe('Modal', () => {
     await userEvent.keyboard('{Escape}');
 
     expect(onDismiss).not.toHaveBeenCalled();
+  });
+
+  it('has an accessible name from the visible heading when title is a string', () => {
+    render(
+      <Modal title="Share" isOpen>
+        <div>Content</div>
+      </Modal>
+    );
+
+    const heading = screen.getByRole('heading', { name: 'Share' });
+    expect(heading).toHaveAttribute('id');
+
+    const dialog = screen.getByRole('dialog');
+    expect(dialog).toHaveAttribute('aria-labelledby', heading.getAttribute('id'));
+    expect(dialog).not.toHaveAttribute('aria-label');
+  });
+
+  it('has an accessible name from a custom title element', () => {
+    render(
+      <Modal title={<h3>Custom Title</h3>} isOpen>
+        <div>Content</div>
+      </Modal>
+    );
+
+    const heading = screen.getByText('Custom Title');
+    const titleWrapper = heading.closest('[id]');
+    expect(titleWrapper).toHaveAttribute('id');
+
+    const dialog = screen.getByRole('dialog');
+    expect(dialog).toHaveAttribute('aria-labelledby', titleWrapper?.getAttribute('id'));
+    expect(dialog).not.toHaveAttribute('aria-label');
+  });
+
+  it('has an accessible name from ModalTabsHeader custom title', () => {
+    render(
+      <Modal
+        isOpen
+        title={
+          <ModalTabsHeader
+            title="Share Panel"
+            tabs={[{ label: 'Link', value: 'link' }]}
+            activeTab="link"
+            onChangeTab={() => {}}
+          />
+        }
+      >
+        <div>Content</div>
+      </Modal>
+    );
+
+    const heading = screen.getByRole('heading', { name: 'Share Panel' });
+    const titleWrapper = heading.closest('[id]');
+    expect(titleWrapper).toHaveAttribute('id');
+
+    const dialog = screen.getByRole('dialog');
+    expect(dialog).toHaveAttribute('aria-labelledby', titleWrapper?.getAttribute('id'));
+  });
+
+  it('uses aria-label when provided for custom title elements', () => {
+    render(
+      <Modal ariaLabel="Share Panel" title={<span>Tabs</span>} isOpen>
+        <div>Content</div>
+      </Modal>
+    );
+
+    const dialog = screen.getByRole('dialog');
+    expect(dialog).toHaveAttribute('aria-label', 'Share Panel');
+    expect(dialog).toHaveAttribute('aria-labelledby');
   });
 
   // Mirrors the app arrangement (see AppWrapper): UNSAFE_PortalProvider routes react-aria

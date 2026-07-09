@@ -71,16 +71,15 @@ export function Modal(props: PropsWithChildren<Props>) {
       trapFocus={trapFocus}
       className={className}
       onClickBackdrop={onClickBackdrop}
-      aria-label={ariaLabel}
-      aria-labelledby={typeof title === 'string' ? titleId : undefined}
+      aria-label={typeof title === 'string' ? undefined : ariaLabel}
+      aria-labelledby={titleId}
     >
       <div className={headerClass}>
-        {typeof title === 'string' && <ModalHeader title={title} id={titleId} />}
-        {
-          // FIXME: custom title components won't get an accessible title.
-          // Do we really want to support them or shall we just limit this ModalTabsHeader?
-          typeof title !== 'string' && title
-        }
+        {typeof title === 'string' ? (
+          <ModalHeader title={title} id={titleId} />
+        ) : (
+          <div id={titleId}>{title}</div>
+        )}
         <div className={styles.modalHeaderClose}>
           <IconButton
             name="times"
