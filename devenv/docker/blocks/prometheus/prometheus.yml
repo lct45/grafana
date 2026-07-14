@@ -34,6 +34,9 @@ scrape_configs:
       - targets: ['fake-prometheus-data:9091']
 
   - job_name: 'grafana'
+    basic_auth:
+      username: metrics
+      password: grafana-metrics
     static_configs:
       - targets: ['host.docker.internal:3000']
 
