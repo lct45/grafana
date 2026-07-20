@@ -180,4 +180,6 @@ func (oss *OSSMigrations) AddMigration(mg *Migrator) {
 	addNatsDiscoveryMigrations(mg)
 
 	ualert.AddAlertRuleStateBigIntMigration(mg)
+
+	addExploreBookmarkMigrations(mg)
 }

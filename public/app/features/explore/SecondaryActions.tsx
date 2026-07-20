@@ -11,11 +11,13 @@ import { contextSrv } from 'app/core/services/context_srv';
 import { AccessControlAction } from 'app/types/accessControl';
 
 import { useQueriesDrawerContext } from './QueriesDrawer/QueriesDrawerContext';
+import { ExploreBookmarksModal } from './Bookmarks/ExploreBookmarksModal';
 import { useQueryLibraryContext } from './QueryLibrary/QueryLibraryContext';
 import { type OnSelectQueriesType, type OnSelectQueryType } from './QueryLibrary/types';
 import { RecentQueriesModal } from './RecentQueries/RecentQueriesModal';
 
 type Props = {
+  exploreId: string;
   addQueryRowButtonDisabled?: boolean;
   addQueryRowButtonHidden?: boolean;
   queryInspectorButtonActive?: boolean;
@@ -39,6 +41,7 @@ const getStyles = (theme: GrafanaTheme2) => {
 };
 
 export function SecondaryActions({
+  exploreId,
   addQueryRowButtonDisabled,
   addQueryRowButtonHidden,
   onClickAddQueryRowButton,
@@ -54,6 +57,7 @@ export function SecondaryActions({
   const { drawerOpened, setDrawerOpened } = useQueriesDrawerContext();
   const recentQueriesUI = useFlagQueryHistoryRecentQueriesUI();
   const [recentQueriesOpen, setRecentQueriesOpen] = useState(false);
+  const [bookmarksOpen, setBookmarksOpen] = useState(false);
   const canReadQueries = config.featureToggles.savedQueriesRBAC
     ? contextSrv.hasPermission(AccessControlAction.QueriesRead)
     : contextSrv.isSignedIn;
@@ -111,6 +115,18 @@ export function SecondaryActions({
       )}
       {/* Keep the separate Query history entry point available during the deprecation period,
           even when the recentQueriesUI flag is enabled. */}
+      <ToolbarButton
+        key="query-bookmarks"
+        variant="canvas"
+        aria-label={t('explore.secondary-actions.query-bookmarks-button-aria-label', 'Query bookmarks')}
+        onClick={() => setBookmarksOpen(true)}
+        icon="bookmark"
+      >
+        <Trans i18nKey="explore.secondary-actions.query-bookmarks-button">Bookmarks</Trans>
+      </ToolbarButton>
+      {bookmarksOpen && (
+        <ExploreBookmarksModal exploreId={exploreId} isOpen={bookmarksOpen} onClose={() => setBookmarksOpen(false)} />
+      )}
       <ToolbarButton
         key="query-history"
         variant={drawerOpened ? 'active' : 'canvas'}

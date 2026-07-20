@@ -148,6 +148,7 @@ import (
 	"github.com/grafana/grafana/pkg/services/publicdashboards"
 	"github.com/grafana/grafana/pkg/services/query"
 	"github.com/grafana/grafana/pkg/services/queryhistory"
+	"github.com/grafana/grafana/pkg/services/explorebookmark"
 	"github.com/grafana/grafana/pkg/services/quota/quotaimpl"
 	"github.com/grafana/grafana/pkg/services/rendering"
 	"github.com/grafana/grafana/pkg/services/search"
@@ -275,6 +276,8 @@ var wireBasicSet = wire.NewSet(
 	wire.Bind(new(shorturls.Service), new(*shorturlimpl.ShortURLService)),
 	queryhistory.ProvideService,
 	wire.Bind(new(queryhistory.Service), new(*queryhistory.QueryHistoryService)),
+	explorebookmark.ProvideService,
+	wire.Bind(new(explorebookmark.Service), new(*explorebookmark.ExploreBookmarkService)),
 	correlations.ProvideService,
 	wire.Bind(new(correlations.Service), new(*correlations.CorrelationsService)),
 	quotaimpl.ProvideService,

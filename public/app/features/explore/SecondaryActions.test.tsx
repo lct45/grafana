@@ -11,6 +11,12 @@ import { QueriesDrawerContextProviderMock } from './QueriesDrawer/mocks';
 import { QueryLibraryContextProviderMock } from './QueryLibrary/mocks';
 import { SecondaryActions } from './SecondaryActions';
 
+jest.mock('./Bookmarks/exploreBookmarkApi', () => ({
+  listExploreBookmarks: jest.fn().mockResolvedValue([]),
+  createExploreBookmark: jest.fn(),
+  deleteExploreBookmark: jest.fn(),
+}));
+
 jest.mock('@grafana/runtime', () => ({
   ...jest.requireActual('@grafana/runtime'),
   getDataSourceSrv: () => ({
@@ -34,6 +40,15 @@ jest.mock('app/core/services/context_srv', () => ({
 
 const mockContextSrv = contextSrv as jest.Mocked<typeof contextSrv>;
 
+const defaultProps = {
+  exploreId: 'left',
+  onClickAddQueryRowButton: noop,
+  onClickQueryInspectorButton: noop,
+  onSelectQueryFromLibrary: noop,
+  onSelectQueriesFromLibrary: noop,
+  onReplaceQueriesFromLibrary: noop,
+};
+
 describe('SecondaryActions', () => {
   afterEach(() => {
     act(() => {
@@ -43,34 +58,22 @@ describe('SecondaryActions', () => {
     jest.resetAllMocks();
   });
 
-  it('should render component with two buttons', () => {
+  it('should render component with action buttons', () => {
     render(
       <QueryLibraryContextProviderMock>
-        <SecondaryActions
-          onClickAddQueryRowButton={noop}
-          onClickQueryInspectorButton={noop}
-          onSelectQueryFromLibrary={noop}
-          onSelectQueriesFromLibrary={noop}
-          onReplaceQueriesFromLibrary={noop}
-        />
+        <SecondaryActions {...defaultProps} />
       </QueryLibraryContextProviderMock>
     );
 
     expect(screen.getByRole('button', { name: /Add query/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Bookmarks/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Query inspector/i })).toBeInTheDocument();
   });
 
   it('should not render hidden elements', () => {
     render(
       <QueriesDrawerContextProviderMock queryLibraryEnabled={false}>
-        <SecondaryActions
-          addQueryRowButtonHidden={true}
-          onClickAddQueryRowButton={noop}
-          onClickQueryInspectorButton={noop}
-          onSelectQueryFromLibrary={noop}
-          onSelectQueriesFromLibrary={noop}
-          onReplaceQueriesFromLibrary={noop}
-        />
+        <SecondaryActions {...defaultProps} addQueryRowButtonHidden={true} />
       </QueriesDrawerContextProviderMock>
     );
 
@@ -79,16 +82,7 @@ describe('SecondaryActions', () => {
   });
 
   it('should disable add row button if addQueryRowButtonDisabled=true', () => {
-    render(
-      <SecondaryActions
-        addQueryRowButtonDisabled={true}
-        onClickAddQueryRowButton={noop}
-        onClickQueryInspectorButton={noop}
-        onSelectQueryFromLibrary={noop}
-        onSelectQueriesFromLibrary={noop}
-        onReplaceQueriesFromLibrary={noop}
-      />
-    );
+    render(<SecondaryActions {...defaultProps} addQueryRowButtonDisabled={true} />);
 
     expect(screen.getByRole('button', { name: /Add query/i })).toBeDisabled();
     expect(screen.getByRole('button', { name: /Query inspector/i })).toBeInTheDocument();
@@ -98,14 +92,7 @@ describe('SecondaryActions', () => {
     mockContextSrv.hasPermission.mockReturnValue(true);
     render(
       <QueryLibraryContextProviderMock queryLibraryEnabled={true}>
-        <SecondaryActions
-          addQueryRowButtonDisabled={true}
-          onClickAddQueryRowButton={noop}
-          onClickQueryInspectorButton={noop}
-          onSelectQueryFromLibrary={noop}
-          onSelectQueriesFromLibrary={noop}
-          onReplaceQueriesFromLibrary={noop}
-        />
+        <SecondaryActions {...defaultProps} addQueryRowButtonDisabled={true} />
       </QueryLibraryContextProviderMock>
     );
 
@@ -124,11 +111,9 @@ describe('SecondaryActions', () => {
     render(
       <QueriesDrawerContextProviderMock setDrawerOpened={onClickHistory}>
         <SecondaryActions
+          {...defaultProps}
           onClickAddQueryRowButton={onClickAddRow}
           onClickQueryInspectorButton={onClickQueryInspector}
-          onSelectQueryFromLibrary={noop}
-          onSelectQueriesFromLibrary={noop}
-          onReplaceQueriesFromLibrary={noop}
         />
       </QueriesDrawerContextProviderMock>
     );
@@ -143,13 +128,7 @@ describe('SecondaryActions', () => {
   it('should render add from saved queries button when saved queries is enabled', () => {
     render(
       <QueryLibraryContextProviderMock queryLibraryEnabled={true}>
-        <SecondaryActions
-          onClickAddQueryRowButton={noop}
-          onClickQueryInspectorButton={noop}
-          onSelectQueryFromLibrary={noop}
-          onSelectQueriesFromLibrary={noop}
-          onReplaceQueriesFromLibrary={noop}
-        />
+        <SecondaryActions {...defaultProps} />
       </QueryLibraryContextProviderMock>
     );
 
@@ -159,13 +138,7 @@ describe('SecondaryActions', () => {
   it('should not render add from saved queries button when saved queries is disabled', () => {
     render(
       <QueryLibraryContextProviderMock queryLibraryEnabled={false}>
-        <SecondaryActions
-          onClickAddQueryRowButton={noop}
-          onClickQueryInspectorButton={noop}
-          onSelectQueryFromLibrary={noop}
-          onSelectQueriesFromLibrary={noop}
-          onReplaceQueriesFromLibrary={noop}
-        />
+        <SecondaryActions {...defaultProps} />
       </QueryLibraryContextProviderMock>
     );
 
@@ -177,13 +150,7 @@ describe('SecondaryActions', () => {
 
     render(
       <QueryLibraryContextProviderMock queryLibraryEnabled={false}>
-        <SecondaryActions
-          onClickAddQueryRowButton={noop}
-          onClickQueryInspectorButton={noop}
-          onSelectQueryFromLibrary={noop}
-          onSelectQueriesFromLibrary={noop}
-          onReplaceQueriesFromLibrary={noop}
-        />
+        <SecondaryActions {...defaultProps} />
       </QueryLibraryContextProviderMock>
     );
 
@@ -197,13 +164,7 @@ describe('SecondaryActions', () => {
 
     render(
       <QueryLibraryContextProviderMock queryLibraryEnabled={true}>
-        <SecondaryActions
-          onClickAddQueryRowButton={noop}
-          onClickQueryInspectorButton={noop}
-          onSelectQueryFromLibrary={noop}
-          onSelectQueriesFromLibrary={noop}
-          onReplaceQueriesFromLibrary={noop}
-        />
+        <SecondaryActions {...defaultProps} />
       </QueryLibraryContextProviderMock>
     );
 
