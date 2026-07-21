@@ -8,6 +8,7 @@ import deut_prot_dark from './themeDefinitions/deut_prot_dark.json';
 import deut_prot_light from './themeDefinitions/deut_prot_light.json';
 import gildedgrove from './themeDefinitions/gildedgrove.json';
 import gloom from './themeDefinitions/gloom.json';
+import harbor from './themeDefinitions/harbor.json';
 import mars from './themeDefinitions/mars.json';
 import matrix from './themeDefinitions/matrix.json';
 import sapphiredusk from './themeDefinitions/sapphiredusk.json';
@@ -34,6 +35,7 @@ const extraThemes: { [key: string]: unknown } = {
   deut_prot_light,
   gildedgrove,
   gloom,
+  harbor,
   mars,
   matrix,
   sapphiredusk,
