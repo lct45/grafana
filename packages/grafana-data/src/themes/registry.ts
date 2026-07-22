@@ -4,6 +4,7 @@ import { createTheme, NewThemeOptionsSchema } from './createTheme';
 import aubergine from './themeDefinitions/aubergine.json';
 import debug from './themeDefinitions/debug.json';
 import desertbloom from './themeDefinitions/desertbloom.json';
+import ember from './themeDefinitions/ember.json';
 import deut_prot_dark from './themeDefinitions/deut_prot_dark.json';
 import deut_prot_light from './themeDefinitions/deut_prot_light.json';
 import gildedgrove from './themeDefinitions/gildedgrove.json';
@@ -30,6 +31,7 @@ const extraThemes: { [key: string]: unknown } = {
   aubergine,
   debug,
   desertbloom,
+  ember,
   deut_prot_dark,
   deut_prot_light,
   gildedgrove,

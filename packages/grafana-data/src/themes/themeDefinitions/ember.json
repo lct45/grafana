@@ -1,0 +1,75 @@
+{
+  "name": "Ember",
+  "id": "ember",
+  "colors": {
+    "mode": "dark",
+    "border": {
+      "weak": "rgba(200, 180, 150, 0.12)",
+      "medium": "rgba(200, 180, 150, 0.20)",
+      "strong": "rgba(200, 180, 150, 0.30)"
+    },
+    "text": {
+      "primary": "#ede8df",
+      "secondary": "rgba(237, 232, 223, 0.65)",
+      "disabled": "rgba(237, 232, 223, 0.48)",
+      "link": "#f0b429",
+      "maxContrast": "#FFFFFF"
+    },
+    "primary": {
+      "main": "#e8a317",
+      "text": "#f0b429",
+      "border": "#e8a317",
+      "name": "primary"
+    },
+    "accent": {
+      "main": "#e8a317",
+      "text": "#f0b429",
+      "border": "#e8a317",
+      "name": "accent"
+    },
+    "secondary": {
+      "main": "rgba(200, 170, 120, 0.10)",
+      "shade": "rgba(200, 170, 120, 0.14)",
+      "transparent": "rgba(200, 170, 120, 0.08)",
+      "text": "rgba(210, 190, 160, 0.95)",
+      "contrastText": "#ede8df",
+      "border": "rgba(180, 160, 130, 0.20)"
+    },
+    "info": {
+      "main": "#5c8fd6"
+    },
+    "success": {
+      "main": "#3d8c4e"
+    },
+    "warning": {
+      "main": "#c9940a"
+    },
+    "error": {
+      "main": "#e05252"
+    },
+    "background": {
+      "canvas": "#13110c",
+      "page": "#181510",
+      "primary": "#1f1c16",
+      "secondary": "#2a261e",
+      "elevated": "#332e24"
+    },
+    "action": {
+      "hover": "rgba(200, 170, 120, 0.08)",
+      "selected": "rgba(232, 163, 23, 0.15)",
+      "selectedBorder": "#e8a317",
+      "focus": "rgba(200, 170, 120, 0.10)",
+      "hoverOpacity": 0.05,
+      "disabledText": "rgba(237, 232, 223, 0.48)",
+      "disabledBackground": "rgba(200, 180, 150, 0.06)",
+      "disabledOpacity": 0.38
+    },
+    "gradients": {
+      "brandHorizontal": "linear-gradient(270deg, #f0b429 0%, #c9740a 100%)",
+      "brandVertical": "linear-gradient(0.01deg, #f0b429 0.01%, #c9740a 99.99%)"
+    },
+    "contrastThreshold": 3,
+    "hoverFactor": 0.03,
+    "tonalOffset": 0.15
+  }
+}
