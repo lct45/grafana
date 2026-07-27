@@ -1,12 +1,15 @@
 import { useCallback, useEffect, useState } from 'react';
 
+import { toURLRange } from '@grafana/data';
 import { type DataQuery } from '@grafana/schema';
 import { createSuccessNotification } from 'app/core/copy/appNotification';
 import { notifyApp } from 'app/core/reducers/appNotification';
 import { changeDatasource } from 'app/features/explore/state/datasource';
-import { setQueries, runQueries } from 'app/features/explore/state/query';
+import { cancelQueries, runQueries, setQueriesAction } from 'app/features/explore/state/query';
 import { getExploreItemSelector } from 'app/features/explore/state/selectors';
-import { updateTimeRange } from 'app/features/explore/state/time';
+import { updateTime } from 'app/features/explore/state/time';
+import { fromURLRange } from 'app/features/explore/state/utils';
+import { withUniqueRefIds } from 'app/features/explore/utils/queries';
 import { useDispatch, useSelector } from 'app/types/store';
 
 import { createExploreBookmark, deleteExploreBookmark, listExploreBookmarks } from './exploreBookmarkApi';
@@ -45,17 +48,17 @@ export function useExploreBookmarks(exploreId: string) {
 
       setIsSaving(true);
       try {
+        // Persist like Explore URL state: relative strings stay as-is; DateTime becomes epoch ms.
+        const urlRange = toURLRange(range.raw);
         const bookmark = await createExploreBookmark({
           name,
           datasourceUid,
           queries: queries as DataQuery[],
-          timeFrom: String(range.raw.from),
-          timeTo: String(range.raw.to),
+          timeFrom: String(urlRange.from),
+          timeTo: String(urlRange.to),
         });
         setBookmarks((current) => [bookmark, ...current.filter((item) => item.uid !== bookmark.uid)]);
-        dispatch(
-          notifyApp(createSuccessNotification(`Bookmark "${bookmark.name}" saved`))
-        );
+        dispatch(notifyApp(createSuccessNotification(`Bookmark "${bookmark.name}" saved`)));
       } finally {
         setIsSaving(false);
       }
@@ -68,23 +71,29 @@ export function useExploreBookmarks(exploreId: string) {
       if (bookmark.datasourceUid !== datasourceUid) {
         await dispatch(changeDatasource({ exploreId, datasource: bookmark.datasourceUid }));
       }
-      dispatch(setQueries(exploreId, bookmark.queries));
+
+      // Apply time + queries without intermediate runs (setQueries auto-runs against the old range).
       dispatch(
-        updateTimeRange({
+        updateTime({
           exploreId,
-          rawRange: { from: bookmark.timeFrom, to: bookmark.timeTo },
+          rawRange: fromURLRange({ from: bookmark.timeFrom, to: bookmark.timeTo }),
         })
       );
+      dispatch(setQueriesAction({ exploreId, queries: withUniqueRefIds(bookmark.queries) }));
+      await dispatch(cancelQueries(exploreId));
       dispatch(runQueries({ exploreId }));
     },
     [datasourceUid, dispatch, exploreId]
   );
 
-  const removeBookmark = useCallback(async (uid: string) => {
-    await deleteExploreBookmark(uid);
-    setBookmarks((current) => current.filter((bookmark) => bookmark.uid !== uid));
-    dispatch(notifyApp(createSuccessNotification('Bookmark deleted')));
-  }, [dispatch]);
+  const removeBookmark = useCallback(
+    async (uid: string) => {
+      await deleteExploreBookmark(uid);
+      setBookmarks((current) => current.filter((bookmark) => bookmark.uid !== uid));
+      dispatch(notifyApp(createSuccessNotification('Bookmark deleted')));
+    },
+    [dispatch]
+  );
 
   return {
     bookmarks,
