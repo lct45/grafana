@@ -3,6 +3,7 @@ package supportbundlesimpl
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 
@@ -78,7 +79,10 @@ func (s *Service) handleDownload(ctx *contextmodel.ReqContext) response.Response
 	uid := web.Params(ctx.Req)[":uid"]
 	bundle, err := s.get(ctx.Req.Context(), uid)
 	if err != nil {
-		return response.Redirect("/support-bundles")
+		if errors.Is(err, supportbundles.ErrNotFound) {
+			return response.Error(http.StatusNotFound, "support bundle not found", err)
+		}
+		return response.Error(http.StatusInternalServerError, "failed to get support bundle", err)
 	}
 
 	if bundle.State != supportbundles.StateComplete {
@@ -98,6 +102,9 @@ func (s *Service) handleRemove(ctx *contextmodel.ReqContext) response.Response {
 	uid := web.Params(ctx.Req)[":uid"]
 	err := s.remove(ctx.Req.Context(), uid)
 	if err != nil {
+		if errors.Is(err, supportbundles.ErrNotFound) {
+			return response.Error(http.StatusNotFound, "support bundle not found", err)
+		}
 		return response.Error(http.StatusInternalServerError, "failed to remove bundle", err)
 	}
 

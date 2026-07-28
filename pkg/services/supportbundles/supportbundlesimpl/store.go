@@ -3,7 +3,6 @@ package supportbundlesimpl
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"sort"
 	"strconv"
@@ -114,8 +113,7 @@ func (s *store) Get(ctx context.Context, uid string) (*supportbundles.Bundle, er
 		return nil, err
 	}
 	if !ok {
-		// FIXME: handle not found
-		return nil, errors.New("not found")
+		return nil, supportbundles.ErrNotFound
 	}
 	var b supportbundles.Bundle
 	if err := json.NewDecoder(strings.NewReader(data)).Decode(&b); err != nil {
