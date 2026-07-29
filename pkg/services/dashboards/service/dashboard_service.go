@@ -2408,6 +2408,7 @@ func (dr *DashboardServiceImpl) cleanupAfterDelete(ctx context.Context, orgID in
 	}
 	sqlStatements := []statement{
 		{SQL: "DELETE FROM star WHERE dashboard_uid = ? AND org_id = ?", args: []any{uid, orgID}},
+		{SQL: "DELETE FROM dashboard_pin WHERE dashboard_uid = ? AND org_id = ?", args: []any{uid, orgID}},
 	}
 	// dashboard_id=0 is used for org/API annotations; never delete by id 0 or we wipe that whole class for the org.
 	if id != 0 {

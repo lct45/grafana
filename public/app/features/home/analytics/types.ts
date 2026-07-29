@@ -14,3 +14,19 @@ export interface EmptyCtaClicked extends EventProperty {
   /** Which empty-state button was clicked. */
   cta_type: 'create_dashboard' | 'browse_dashboards';
 }
+
+export interface PinClicked extends EventProperty {
+  uid: string;
+}
+
+export interface UnpinClicked extends EventProperty {
+  uid: string;
+}
+
+export interface PinReordered extends EventProperty {
+  dashboard_count: number;
+}
+
+export interface PinNoteUpdated extends EventProperty {
+  uid: string;
+}

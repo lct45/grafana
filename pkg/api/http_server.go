@@ -105,6 +105,8 @@ import (
 	spm "github.com/grafana/grafana/pkg/services/secrets/kvstore/migrations"
 	"github.com/grafana/grafana/pkg/services/serviceaccounts"
 	"github.com/grafana/grafana/pkg/services/shorturls"
+	"github.com/grafana/grafana/pkg/services/dashboardpin"
+	dashboardPinApi "github.com/grafana/grafana/pkg/services/dashboardpin/api"
 	"github.com/grafana/grafana/pkg/services/star"
 	starApi "github.com/grafana/grafana/pkg/services/star/api"
 	"github.com/grafana/grafana/pkg/services/stats"
@@ -198,6 +200,7 @@ type HTTPServer struct {
 	dashboardVersionService      dashver.Service
 	PublicDashboardsApi          *publicdashboards.Api
 	starService                  star.Service
+	dashboardPinService          dashboardpin.Service
 	apiKeyService                apikey.Service
 	kvStore                      kvstore.KVStore
 	pluginsCDNService            *pluginscdn.Service
@@ -216,6 +219,7 @@ type HTTPServer struct {
 	statsService                    stats.Service
 	authnService                    authn.Service
 	starApi                         *starApi.API
+	dashboardPinApi                 *dashboardPinApi.API
 	promRegister                    prometheus.Registerer
 	promGatherer                    prometheus.Gatherer
 	clientConfigProvider            grafanaapiserver.DirectRestConfigProvider
@@ -280,7 +284,7 @@ func ProvideHTTPServer(opts ServerOptions, cfg *setting.Cfg, routeRegister routi
 	accesscontrolService accesscontrol.Service, navTreeService navtree.Service,
 	annotationRepo annotations.Repository, tagService tag.Service, oauthTokenService oauthtoken.OAuthTokenService,
 	statsService stats.Service, authnService authn.Service, pluginsCDNService *pluginscdn.Service, promGatherer prometheus.Gatherer,
-	starApi *starApi.API, promRegister prometheus.Registerer, anonService anonymous.Service,
+	starApi *starApi.API, dashboardPinService dashboardpin.Service, dashboardPinApi *dashboardPinApi.API, promRegister prometheus.Registerer, anonService anonymous.Service,
 	clientConfigProvider grafanaapiserver.DirectRestConfigProvider, clientGenerator resource.ClientGenerator,
 	userVerifier user.Verifier, pluginPreinstall pluginchecker.Preinstall, publicDashboardsService publicdashboards.Service,
 ) (*HTTPServer, error) {
@@ -359,6 +363,7 @@ func ProvideHTTPServer(opts ServerOptions, cfg *setting.Cfg, routeRegister routi
 		dashboardPermissionsService:  dashboardPermissionsService,
 		dashboardVersionService:      dashboardVersionService,
 		starService:                  starService,
+		dashboardPinService:          dashboardPinService,
 		apiKeyService:                apiKeyService,
 		kvStore:                      kvStore,
 		PublicDashboardsApi:          pubdashApi,
@@ -378,6 +383,7 @@ func ProvideHTTPServer(opts ServerOptions, cfg *setting.Cfg, routeRegister routi
 		pluginsCDNService:            pluginsCDNService,
 		managedPluginsService:        managedPlugins,
 		starApi:                      starApi,
+		dashboardPinApi:              dashboardPinApi,
 		promRegister:                 promRegister,
 		promGatherer:                 promGatherer,
 		clientConfigProvider:         clientConfigProvider,

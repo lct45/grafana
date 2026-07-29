@@ -172,6 +172,8 @@ import (
 	ssoSettingsImpl "github.com/grafana/grafana/pkg/services/ssosettings/ssosettingsimpl"
 	starApi "github.com/grafana/grafana/pkg/services/star/api"
 	"github.com/grafana/grafana/pkg/services/star/starimpl"
+	dashboardPinApi "github.com/grafana/grafana/pkg/services/dashboardpin/api"
+	"github.com/grafana/grafana/pkg/services/dashboardpin/dashboardpinimpl"
 	"github.com/grafana/grafana/pkg/services/stats/statsimpl"
 	"github.com/grafana/grafana/pkg/services/store"
 	"github.com/grafana/grafana/pkg/services/supportbundles"
@@ -392,6 +394,8 @@ var wireBasicSet = wire.NewSet(
 	publicdashboards.ProvideMetricsService,
 	publicdashboards.ProvideApi,
 	starApi.ProvideApi,
+	dashboardpinimpl.ProvideService,
+	dashboardPinApi.ProvideApi,
 	prefapi.ProvideK8sHandler,
 	annotationsapi.ProvideMigrationProxy,
 	starApi.ProvideK8sClients,

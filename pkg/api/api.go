@@ -299,6 +299,12 @@ func (hs *HTTPServer) registerRoutes() {
 			userRoute.Post("/stars/dashboard/uid/:uid", routing.Wrap(hs.starApi.StarDashboardByUID))
 			userRoute.Delete("/stars/dashboard/uid/:uid", routing.Wrap(hs.starApi.UnstarDashboardByUID))
 
+			userRoute.Get("/pinned-dashboards", routing.Wrap(hs.dashboardPinApi.ListPinnedDashboards))
+			userRoute.Post("/pinned-dashboards/dashboard/uid/:uid", routing.Wrap(hs.dashboardPinApi.PinDashboardByUID))
+			userRoute.Delete("/pinned-dashboards/dashboard/uid/:uid", routing.Wrap(hs.dashboardPinApi.UnpinDashboardByUID))
+			userRoute.Patch("/pinned-dashboards/dashboard/uid/:uid", routing.Wrap(hs.dashboardPinApi.UpdatePinNoteByUID))
+			userRoute.Put("/pinned-dashboards/order", routing.Wrap(hs.dashboardPinApi.ReorderPinnedDashboards))
+
 			userRoute.Put("/password", routing.Wrap(hs.ChangeUserPassword))
 			userRoute.Get("/quotas", routing.Wrap(hs.GetUserQuotas))
 			userRoute.Get("/preferences", routing.Wrap(hs.GetUserPreferences))

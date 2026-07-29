@@ -1,5 +1,6 @@
 import { reportInteraction } from '@grafana/runtime';
-import { Card, Icon, Link, Stack, Text, useStyles2 } from '@grafana/ui';
+import { t } from '@grafana/i18n';
+import { Card, Icon, IconButton, Link, Stack, Text, useStyles2 } from '@grafana/ui';
 import { type LocationInfo } from 'app/features/search/service/types';
 import { StarToolbarButton } from 'app/features/stars/StarToolbarButton';
 
@@ -15,6 +16,8 @@ interface Props {
   source: string; // for rudderstack analytics to track which page DashListItem click from
   order?: number; // for rudderstack analytics to track position in cards
   onStarChange?: (id: string, isStarred: boolean) => void;
+  isPinned?: boolean;
+  onPinToggle?: (shouldPin: boolean) => void;
 }
 export function DashListItem({
   dashboard,
@@ -25,6 +28,8 @@ export function DashListItem({
   order,
   onStarChange,
   source,
+  isPinned,
+  onPinToggle,
 }: Props) {
   const css = useStyles2(getStyles);
 
@@ -56,6 +61,22 @@ export function DashListItem({
             id={dashboard.uid}
             onStarChange={onStarChange}
           />
+          {onPinToggle && (
+            <IconButton
+              name={isPinned ? 'pin' : 'gf-pin'}
+              tooltip={
+                isPinned
+                  ? t('home.pinned-shelf.unpin', 'Unpin dashboard')
+                  : t('home.pinned-shelf.pin', 'Pin dashboard')
+              }
+              aria-label={
+                isPinned
+                  ? t('home.pinned-shelf.unpin', 'Unpin dashboard')
+                  : t('home.pinned-shelf.pin', 'Pin dashboard')
+              }
+              onClick={() => onPinToggle(!isPinned)}
+            />
+          )}
         </div>
       ) : (
         <Card noMargin className={css.dashlistCardContainer}>

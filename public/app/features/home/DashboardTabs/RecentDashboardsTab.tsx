@@ -21,9 +21,20 @@ interface Props {
   retry: () => void;
   foldersByUid: Record<string, LocationInfo>;
   onStarChange?: () => void;
+  isPinned?: (uid: string) => boolean;
+  onPinToggle?: (uid: string, shouldPin: boolean) => void | Promise<void>;
 }
 
-export function RecentDashboardsTab({ dashboards, loading, error, retry, foldersByUid, onStarChange }: Props) {
+export function RecentDashboardsTab({
+  dashboards,
+  loading,
+  error,
+  retry,
+  foldersByUid,
+  onStarChange,
+  isPinned,
+  onPinToggle,
+}: Props) {
   const styles = useStyles2(getStyles);
 
   if (loading) {
@@ -97,6 +108,14 @@ export function RecentDashboardsTab({ dashboards, loading, error, retry, folders
               layoutMode="list"
               source="homepage_recentTab"
               onStarChange={onStarChange}
+              isPinned={isPinned?.(dash.uid)}
+              onPinToggle={
+                onPinToggle
+                  ? (shouldPin) => {
+                      void onPinToggle(dash.uid, shouldPin);
+                    }
+                  : undefined
+              }
             />
           </li>
         ))}

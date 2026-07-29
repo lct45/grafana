@@ -71,6 +71,7 @@ func (oss *OSSMigrations) AddMigration(mg *Migrator) {
 	accesscontrol.AddAlertingPermissionsMigrator(mg)
 
 	addQueryHistoryStarMigrations(mg)
+	addDashboardPinMigrations(mg)
 
 	addCorrelationsMigrations(mg)
 

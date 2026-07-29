@@ -70,6 +70,7 @@ beforeEach(() => {
   window.localStorage.removeItem(impressionKey);
   seedStars([]);
   config.licenseInfo.enabledFeatures = {};
+  server.use(http.get('/api/user/pinned-dashboards', () => HttpResponse.json([])));
 });
 
 const createDashboardTabsExtensionComponent = (

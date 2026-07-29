@@ -57,9 +57,11 @@ function DashboardExtensionTab({
 
 interface Props {
   extensionComponents: Array<ComponentTypeWithExtensionMeta<HomepageTabExtensionProps>>;
+  isPinned?: (uid: string) => boolean;
+  onPinToggle?: (uid: string, shouldPin: boolean) => void | Promise<void>;
 }
 
-export function DashboardTabs({ extensionComponents }: Props) {
+export function DashboardTabs({ extensionComponents, isPinned, onPinToggle }: Props) {
   const styles = useStyles2(getStyles);
   const [activeTab, setActiveTab] = useState(RECENT_TAB_ID);
   const [extensionTabs, setExtensionTabs] = useState<HomepageTab[]>([]);
@@ -216,6 +218,8 @@ export function DashboardTabs({ extensionComponents }: Props) {
                 retry={recentRetry}
                 foldersByUid={foldersByUid}
                 onStarChange={starredRetry}
+                isPinned={isPinned}
+                onPinToggle={onPinToggle}
               />
             )}
             {activeTab === MOST_USED_TAB_ID && (

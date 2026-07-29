@@ -10,6 +10,7 @@ import { Grid, Stack, useStyles2 } from '@grafana/ui';
 import { Page } from 'app/core/components/Page/Page';
 import { ASSISTANT_PLUGIN_ID, SETUPGUIDE_PLUGIN_ID } from 'app/core/constants';
 import { isOnPrem } from 'app/core/utils/isOnPrem';
+import { useDashboardLocationInfo } from 'app/features/search/hooks/useDashboardLocationInfo';
 
 import { FiringAlertsCard, canViewFiringAlerts } from './AlertsIncidents/FiringAlertsCard';
 import { IncidentsCard } from './AlertsIncidents/IncidentsCard';
@@ -17,7 +18,10 @@ import { DashboardTabs } from './DashboardTabs/DashboardTabs';
 import { type HomepageTabExtensionProps } from './DashboardTabs/types';
 import { HomePageSkeleton } from './HomePageSkeleton';
 import { HomeSection } from './HomeSection';
+import { pinClicked } from './analytics/main';
+import { usePinnedDashboards } from './pinned/usePinnedDashboards';
 import Recommendations from './Recommendations/Recommendations';
+import { PinnedDashboardsShelf } from './shelves/PinnedDashboardsShelf';
 import useHomeGreeting from './useHomeGreeting';
 
 const getEdition = () => {
@@ -37,6 +41,18 @@ export default function HomePage() {
   const greeting = useHomeGreeting();
 
   const redesignEnabled = useFlagGrafanaGrowthHomepage();
+  const {
+    pinnedDashboards,
+    loading: pinnedLoading,
+    error: pinnedError,
+    retry: pinnedRetry,
+    isPinned,
+    pin,
+    unpin,
+    updateNote,
+    reorder,
+  } = usePinnedDashboards();
+  const { foldersByUid } = useDashboardLocationInfo(pinnedDashboards.length > 0);
 
   const { components: assistantComponents, isLoading: isLoadingAssistant } = usePluginComponents({
     extensionPointId: PluginExtensionPoints.HomepageAssistant,
@@ -91,7 +107,28 @@ export default function HomePage() {
                   components: assistantComponents,
                   pluginId: ASSISTANT_PLUGIN_ID,
                 })}
-                <DashboardTabs extensionComponents={tabComponents} />
+                <PinnedDashboardsShelf
+                  dashboards={pinnedDashboards}
+                  loading={pinnedLoading}
+                  error={pinnedError}
+                  retry={pinnedRetry}
+                  foldersByUid={foldersByUid}
+                  onUnpin={unpin}
+                  onReorder={reorder}
+                  onUpdateNote={updateNote}
+                />
+                <DashboardTabs
+                  extensionComponents={tabComponents}
+                  isPinned={isPinned}
+                  onPinToggle={async (uid, shouldPin) => {
+                    if (shouldPin) {
+                      pinClicked({ uid });
+                      await pin(uid);
+                      return;
+                    }
+                    await unpin(uid);
+                  }}
+                />
               </HomeSection>
 
               {redesignEnabled && <Recommendations />}

@@ -24,6 +24,7 @@ beforeEach(() => {
   // Stub endpoints the alerts/incidents cards probe so unhandled requests don't fail the test
   server.use(
     http.get('/api/user/teams', () => HttpResponse.json([])),
+    http.get('/api/user/pinned-dashboards', () => HttpResponse.json([])),
     http.get('/api/alertmanager/:datasourceUid/api/v2/alerts', () => HttpResponse.json([])),
     // IncidentsCard checks the IRM/Incident plugins; report them absent so it renders nothing
     http.get('/api/plugins/:pluginId/settings', () => HttpResponse.json({ enabled: false }))
