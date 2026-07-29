@@ -13,6 +13,7 @@ import gloom from '@grafana/data/themes/definitions/gloom.json';
 import mars from '@grafana/data/themes/definitions/mars.json';
 import matrix from '@grafana/data/themes/definitions/matrix.json';
 import sapphiredusk from '@grafana/data/themes/definitions/sapphiredusk.json';
+import sunset from '@grafana/data/themes/definitions/sunset.json';
 import synthwave from '@grafana/data/themes/definitions/synthwave.json';
 import tritanopia_dark from '@grafana/data/themes/definitions/tritanopia_dark.json';
 import tritanopia_light from '@grafana/data/themes/definitions/tritanopia_light.json';
@@ -62,6 +63,7 @@ const experimentalDefinitions: Record<string, unknown> = {
   mars,
   matrix,
   sapphiredusk,
+  sunset,
   synthwave,
   tritanopia_dark,
   tritanopia_light,

@@ -1,0 +1,85 @@
+{
+  "name": "Sunset",
+  "id": "sunset",
+  "colors": {
+    "mode": "dark",
+    "border": {
+      "weak": "rgba(255, 122, 69, 0.14)",
+      "medium": "rgba(255, 122, 69, 0.24)",
+      "strong": "rgba(255, 122, 69, 0.38)"
+    },
+    "text": {
+      "primary": "#F2E8E0",
+      "secondary": "#C4B0A8",
+      "disabled": "rgba(242, 232, 224, 0.45)",
+      "link": "#FFB088",
+      "maxContrast": "#FFFFFF"
+    },
+    "primary": {
+      "main": "#FF7A45",
+      "text": "#FFB088",
+      "border": "#FF7A45",
+      "name": "primary",
+      "shade": "#FF9466",
+      "transparent": "rgba(255, 122, 69, 0.16)",
+      "contrastText": "#1A0F14",
+      "borderTransparent": "rgba(255, 122, 69, 0.35)"
+    },
+    "secondary": {
+      "main": "#2A1C30",
+      "shade": "#3A2740",
+      "transparent": "rgba(232, 120, 140, 0.08)",
+      "text": "#C4B0A8",
+      "contrastText": "#F2E8E0",
+      "border": "rgba(255, 122, 69, 0.14)",
+      "name": "secondary",
+      "borderTransparent": "rgba(255, 122, 69, 0.25)"
+    },
+    "accent": {
+      "main": "#E84A8A",
+      "text": "#F48FB1",
+      "border": "#E84A8A",
+      "name": "accent",
+      "shade": "#F06BA0",
+      "transparent": "rgba(232, 74, 138, 0.16)",
+      "contrastText": "#1A0F14",
+      "borderTransparent": "rgba(232, 74, 138, 0.35)"
+    },
+    "info": {
+      "main": "#7B5EA7"
+    },
+    "error": {
+      "main": "#E6455F"
+    },
+    "success": {
+      "main": "#3D9B6E"
+    },
+    "warning": {
+      "main": "#F0A202"
+    },
+    "background": {
+      "canvas": "#0F0A12",
+      "page": "#16101A",
+      "primary": "#1C1424",
+      "secondary": "#2A1C30",
+      "elevated": "#2A1C30"
+    },
+    "action": {
+      "hover": "rgba(255, 122, 69, 0.12)",
+      "selected": "rgba(232, 74, 138, 0.14)",
+      "selectedBorder": "#FF7A45",
+      "focus": "rgba(255, 122, 69, 0.16)",
+      "hoverOpacity": 0.08,
+      "disabledText": "rgba(242, 232, 224, 0.45)",
+      "disabledBackground": "rgba(255, 122, 69, 0.06)",
+      "disabledOpacity": 0.38
+    },
+    "gradients": {
+      "brandHorizontal": "linear-gradient(270deg, #FF7A45 0%, #E84A8A 55%, #7B3FA0 100%)",
+      "brandVertical": "linear-gradient(0.01deg, #FF7A45 0.01%, #E84A8A 55%, #7B3FA0 99.99%)"
+    },
+    "contrastThreshold": 3,
+    "hoverFactor": 0.04,
+    "tonalOffset": 0.15
+  }
+}
