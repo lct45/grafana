@@ -11,7 +11,7 @@ test.describe(
     const bookmarkName = `E2E bookmark ${Date.now()}`;
 
     async function openBookmarksModal(page: import('@playwright/test').Page) {
-      await page.getByRole('button', { name: 'Bookmarks' }).click();
+      await page.getByRole('button', { name: 'Query bookmarks' }).click();
       const modal = page.getByRole('dialog', { name: 'Query bookmarks' });
       await expect(modal).toBeVisible();
       return modal;
@@ -22,7 +22,7 @@ test.describe(
 
       const exploreContainer = dashboardPage.getByGrafanaSelector(selectors.pages.Explore.General.container);
       await expect(exploreContainer).toBeVisible();
-      await expect(page.getByRole('button', { name: 'Bookmarks' })).toBeVisible();
+      await expect(page.getByRole('button', { name: 'Query bookmarks' })).toBeVisible();
     });
 
     test('should save, list, and delete a bookmark', async ({ page, selectors, dashboardPage }) => {
