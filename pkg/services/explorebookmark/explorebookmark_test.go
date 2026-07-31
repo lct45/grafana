@@ -135,6 +135,42 @@ func TestCreateBookmarkValidation(t *testing.T) {
 		resp := sc.service.createHandler(sc.reqContext)
 		require.Equal(t, 400, resp.Status())
 	})
+
+	testScenario(t, "rejects missing datasource uid", func(t *testing.T, sc scenarioContext) {
+		command := CreateExploreBookmarkCommand{
+			Name:     "CPU usage",
+			Queries:  simplejson.NewFromAny([]interface{}{map[string]any{"expr": "up"}}),
+			TimeFrom: "now-6h",
+			TimeTo:   "now",
+		}
+		sc.reqContext.Req.Body = mockRequestBody(command)
+		resp := sc.service.createHandler(sc.reqContext)
+		require.Equal(t, 400, resp.Status())
+	})
+
+	testScenario(t, "rejects missing queries", func(t *testing.T, sc scenarioContext) {
+		command := CreateExploreBookmarkCommand{
+			Name:          "CPU usage",
+			DatasourceUID: testDsUID,
+			TimeFrom:      "now-6h",
+			TimeTo:        "now",
+		}
+		sc.reqContext.Req.Body = mockRequestBody(command)
+		resp := sc.service.createHandler(sc.reqContext)
+		require.Equal(t, 400, resp.Status())
+	})
+
+	testScenario(t, "rejects missing time range", func(t *testing.T, sc scenarioContext) {
+		command := CreateExploreBookmarkCommand{
+			Name:          "CPU usage",
+			DatasourceUID: testDsUID,
+			Queries:       simplejson.NewFromAny([]interface{}{map[string]any{"expr": "up"}}),
+			TimeFrom:      "now-6h",
+		}
+		sc.reqContext.Req.Body = mockRequestBody(command)
+		resp := sc.service.createHandler(sc.reqContext)
+		require.Equal(t, 400, resp.Status())
+	})
 }
 
 func TestListBookmarks(t *testing.T) {
