@@ -32,8 +32,11 @@ test.describe(
       await expect(exploreContainer).toBeVisible();
 
       const runButton = dashboardPage.getByGrafanaSelector(selectors.components.RefreshPicker.runButtonV2);
+      const queryResponse = page.waitForResponse(
+        (resp) => resp.url().includes('/api/ds/query') && resp.status() === 200
+      );
       await runButton.click();
-      await page.waitForResponse((resp) => resp.url().includes('/api/ds/query') && resp.status() === 200);
+      await queryResponse;
 
       let modal = await openBookmarksModal(page);
       await modal.getByPlaceholder('e.g. CPU usage last 6 hours').fill(bookmarkName);
@@ -78,8 +81,11 @@ test.describe(
       await modal.getByRole('button', { name: 'Close' }).click();
 
       const runButton = dashboardPage.getByGrafanaSelector(selectors.components.RefreshPicker.runButtonV2);
+      const queryResponse = page.waitForResponse(
+        (resp) => resp.url().includes('/api/ds/query') && resp.status() === 200
+      );
       await runButton.click();
-      await page.waitForResponse((resp) => resp.url().includes('/api/ds/query') && resp.status() === 200);
+      await queryResponse;
 
       const reloadModal = await openBookmarksModal(page);
       await reloadModal.getByPlaceholder('e.g. CPU usage last 6 hours').fill(bookmarkName);
