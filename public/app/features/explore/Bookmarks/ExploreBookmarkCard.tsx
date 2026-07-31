@@ -1,11 +1,15 @@
 import { css } from '@emotion/css';
 import { useState } from 'react';
 
-import { type GrafanaTheme2 } from '@grafana/data';
+import { rangeUtil, type GrafanaTheme2 } from '@grafana/data';
 import { Trans, t } from '@grafana/i18n';
-import { Button, ConfirmModal, IconButton, Input, Spinner, useStyles2 } from '@grafana/ui';
+import { Button, ConfirmModal, IconButton, useStyles2 } from '@grafana/ui';
 import { createQueryText } from 'app/core/utils/richHistory';
+import { getTimeZone } from 'app/features/profile/state/selectors';
+import { useSelector } from 'app/types/store';
+
 import { getDatasourceSrv } from '../../plugins/datasource_srv';
+import { fromURLRange } from '../state/utils';
 
 import { type ExploreBookmark } from './types';
 
@@ -55,8 +59,14 @@ const getStyles = (theme: GrafanaTheme2) => ({
 export function ExploreBookmarkCard({ bookmark, onOpen, onDelete }: Props) {
   const styles = useStyles2(getStyles);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const timeZone = useSelector((state) => getTimeZone(state.user));
   const dsApi = getDatasourceSrv().getInstanceSettings(bookmark.datasourceUid);
   const queryPreview = bookmark.queries.map((query) => createQueryText(query)).join('\n');
+  // Parse the same way openBookmark does, so the label always matches the range that opening applies.
+  const timeRangeLabel = rangeUtil.describeTimeRange(
+    fromURLRange({ from: bookmark.timeFrom, to: bookmark.timeTo }),
+    timeZone
+  );
 
   return (
     <>
@@ -65,7 +75,7 @@ export function ExploreBookmarkCard({ bookmark, onOpen, onDelete }: Props) {
           <div>
             <div className={styles.title}>{bookmark.name}</div>
             <div className={styles.meta}>
-              {dsApi?.name ?? bookmark.datasourceUid} · {bookmark.timeFrom} to {bookmark.timeTo}
+              {dsApi?.name ?? bookmark.datasourceUid} · {timeRangeLabel}
             </div>
           </div>
           <IconButton
