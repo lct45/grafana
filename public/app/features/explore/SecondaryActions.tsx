@@ -10,12 +10,15 @@ import { ToolbarButton, useTheme2 } from '@grafana/ui';
 import { contextSrv } from 'app/core/services/context_srv';
 import { AccessControlAction } from 'app/types/accessControl';
 
+import { ExploreBookmarksButton } from './ExploreBookmarks/ExploreBookmarksButton';
+import { useExploreBookmarksContext } from './ExploreBookmarks/ExploreBookmarksContext';
 import { useQueriesDrawerContext } from './QueriesDrawer/QueriesDrawerContext';
 import { useQueryLibraryContext } from './QueryLibrary/QueryLibraryContext';
 import { type OnSelectQueriesType, type OnSelectQueryType } from './QueryLibrary/types';
 import { RecentQueriesModal } from './RecentQueries/RecentQueriesModal';
 
 type Props = {
+  exploreId: string;
   addQueryRowButtonDisabled?: boolean;
   addQueryRowButtonHidden?: boolean;
   queryInspectorButtonActive?: boolean;
@@ -39,6 +42,7 @@ const getStyles = (theme: GrafanaTheme2) => {
 };
 
 export function SecondaryActions({
+  exploreId,
   addQueryRowButtonDisabled,
   addQueryRowButtonHidden,
   onClickAddQueryRowButton,
@@ -52,6 +56,7 @@ export function SecondaryActions({
   const styles = getStyles(theme);
   const { queryLibraryEnabled, openDrawer: openQueryLibraryDrawer } = useQueryLibraryContext();
   const { drawerOpened, setDrawerOpened } = useQueriesDrawerContext();
+  const { drawerOpen: bookmarksOpen, closeDrawer: closeBookmarksDrawer } = useExploreBookmarksContext();
   const recentQueriesUI = useFlagQueryHistoryRecentQueriesUI();
   const [recentQueriesOpen, setRecentQueriesOpen] = useState(false);
   const canReadQueries = config.featureToggles.savedQueriesRBAC
@@ -109,13 +114,19 @@ export function SecondaryActions({
           )}
         </>
       )}
+      <ExploreBookmarksButton exploreId={exploreId} />
       {/* Keep the separate Query history entry point available during the deprecation period,
           even when the recentQueriesUI flag is enabled. */}
       <ToolbarButton
         key="query-history"
         variant={drawerOpened ? 'active' : 'canvas'}
         aria-label={t('explore.secondary-actions.query-history-button-aria-label', 'Query history')}
-        onClick={() => setDrawerOpened(!drawerOpened)}
+        onClick={() => {
+          if (bookmarksOpen) {
+            closeBookmarksDrawer();
+          }
+          setDrawerOpened(!drawerOpened);
+        }}
         data-testid={Components.QueryTab.queryHistoryButton}
         icon="history"
       >

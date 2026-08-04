@@ -72,6 +72,8 @@ func (oss *OSSMigrations) AddMigration(mg *Migrator) {
 
 	addQueryHistoryStarMigrations(mg)
 
+	addExploreBookmarkMigrations(mg)
+
 	addCorrelationsMigrations(mg)
 
 	addPublicDashboardMigration(mg)

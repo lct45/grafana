@@ -16,6 +16,8 @@ import { Page } from '../../core/components/Page/Page';
 import { CorrelationEditorModeBar } from './CorrelationEditorModeBar';
 import { ExploreActions } from './ExploreActions';
 import { ExploreDrawer } from './ExploreDrawer';
+import { ExploreBookmarksContextProvider, useExploreBookmarksContext } from './ExploreBookmarks/ExploreBookmarksContext';
+import { ExploreBookmarksDrawer } from './ExploreBookmarks/ExploreBookmarksDrawer';
 import { ExplorePaneContainer } from './ExplorePaneContainer';
 import { useQueriesDrawerContext } from './QueriesDrawer/QueriesDrawerContext';
 import RichHistoryContainer from './RichHistory/RichHistoryContainer';
@@ -30,7 +32,11 @@ import { isSplit, selectCorrelationDetails, selectPanesEntries } from './state/s
 const MIN_PANE_WIDTH = 200;
 
 export default function ExplorePage(props: GrafanaRouteComponentProps<{}, ExploreQueryParams>) {
-  return <ExplorePageContent {...props} />;
+  return (
+    <ExploreBookmarksContextProvider>
+      <ExplorePageContent {...props} />
+    </ExploreBookmarksContextProvider>
+  );
 }
 
 function ExplorePageContent(props: GrafanaRouteComponentProps<{}, ExploreQueryParams>) {
@@ -52,6 +58,7 @@ function ExplorePageContent(props: GrafanaRouteComponentProps<{}, ExploreQueryPa
   const hasSplit = useSelector(isSplit);
   const correlationDetails = useSelector(selectCorrelationDetails);
   const { drawerOpened, setDrawerOpened } = useQueriesDrawerContext();
+  const { drawerOpen: bookmarksDrawerOpen } = useExploreBookmarksContext();
   const showCorrelationEditorBar = correlationDetails?.editorMode || false;
 
   useEffect(() => {
@@ -109,6 +116,7 @@ function ExplorePageContent(props: GrafanaRouteComponentProps<{}, ExploreQueryPa
             />
           </ExploreDrawer>
         )}
+        {bookmarksDrawerOpen && <ExploreBookmarksDrawer />}
       </div>
     </Page>
   );

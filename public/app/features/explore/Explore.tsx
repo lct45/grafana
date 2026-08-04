@@ -716,6 +716,7 @@ export class Explore extends PureComponent<Props, ExploreState> {
                           }
                         />
                         <SecondaryActions
+                          exploreId={exploreId}
                           // do not allow people to add queries with potentially different datasources in correlations editor mode
                           addQueryRowButtonDisabled={
                             isLive || (isCorrelationsEditorMode && datasourceInstance.meta.mixed) || !!queryLibraryRef
