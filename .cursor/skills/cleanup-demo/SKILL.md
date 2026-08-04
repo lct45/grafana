@@ -67,10 +67,19 @@ Work against `lct45/grafana` only. Never delete `main`.
 
 Use `git` for remote deletes (not `gh api -X DELETE`). Mutating `gh` commands are blocked by `.cursor/hooks/enforce-fieldsphere-gh.sh` unless they pass `--repo lct45/grafana`, and `gh api` does not support that flag.
 
-Confirm `origin` points at `lct45/grafana`, then:
+Abort unless `origin` is `lct45/grafana`, then delete remote branches:
 
 ```bash
-git remote get-url origin   # must be git@github.com:lct45/grafana.git (or https equivalent)
+ORIGIN_URL="$(git remote get-url origin)"
+case "$ORIGIN_URL" in
+  *github.com[:/]lct45/grafana.git|*github.com[:/]lct45/grafana)
+    ;;
+  *)
+    echo "ABORT: origin is '$ORIGIN_URL', expected lct45/grafana" >&2
+    exit 1
+    ;;
+esac
+
 git fetch origin --prune
 git ls-remote --heads origin \
   | awk '{print $2}' \
