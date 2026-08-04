@@ -65,11 +65,19 @@ Work against `lct45/grafana` only. Never delete `main`.
 
 ### 3a — Remote branches on `lct45/grafana`
 
+Use `git` for remote deletes (not `gh api -X DELETE`). Mutating `gh` commands are blocked by `.cursor/hooks/enforce-fieldsphere-gh.sh` unless they pass `--repo lct45/grafana`, and `gh api` does not support that flag.
+
+Confirm `origin` points at `lct45/grafana`, then:
+
 ```bash
-gh api --paginate repos/lct45/grafana/branches --jq '.[].name' \
+git remote get-url origin   # must be git@github.com:lct45/grafana.git (or https equivalent)
+git fetch origin --prune
+git ls-remote --heads origin \
+  | awk '{print $2}' \
+  | sed 's#refs/heads/##' \
   | grep -vx 'main' \
   | while read -r b; do
-      gh api -X DELETE "repos/lct45/grafana/git/refs/heads/$(printf %s "$b" | jq -sRr @uri)" \
+      git push origin --delete "$b" \
         && echo "deleted remote: $b" \
         || echo "FAILED remote: $b"
     done

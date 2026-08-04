@@ -28,7 +28,7 @@ fi
 
 if [[ "$is_mutating" == "true" && "$targets_upstream" == "true" ]]; then
   cat <<'EOF'
-{"continue":true,"permission":"deny","user_message":"Blocked: write actions to grafana/grafana are not allowed from this repo. Target lct45/grafana instead.","agent_message":"This gh command appears to perform a write operation against grafana/grafana. Use --repo fieldsphere/grafana for write actions."}
+{"continue":true,"permission":"deny","user_message":"Blocked: write actions to grafana/grafana are not allowed from this repo. Target lct45/grafana instead.","agent_message":"This gh command appears to perform a write operation against grafana/grafana. Use --repo lct45/grafana for write actions."}
 EOF
   exit 0
 fi
