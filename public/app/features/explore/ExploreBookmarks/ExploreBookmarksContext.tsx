@@ -7,7 +7,16 @@ interface ExploreBookmarksContextValue {
   closeDrawer: () => void;
 }
 
-const ExploreBookmarksContext = createContext<ExploreBookmarksContextValue | undefined>(undefined);
+const defaultExploreBookmarksContext: ExploreBookmarksContextValue = {
+  drawerOpen: false,
+  targetExploreId: null,
+  openDrawer: () => {},
+  closeDrawer: () => {},
+};
+
+// Default mirrors QueriesDrawerContext so Explore unit tests (and other
+// SecondaryActions consumers) do not crash without an explicit provider.
+const ExploreBookmarksContext = createContext<ExploreBookmarksContextValue>(defaultExploreBookmarksContext);
 
 export function ExploreBookmarksContextProvider({ children }: { children: ReactNode }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -37,9 +46,5 @@ export function ExploreBookmarksContextProvider({ children }: { children: ReactN
 }
 
 export function useExploreBookmarksContext() {
-  const context = useContext(ExploreBookmarksContext);
-  if (!context) {
-    throw new Error('useExploreBookmarksContext must be used within ExploreBookmarksContextProvider');
-  }
-  return context;
+  return useContext(ExploreBookmarksContext);
 }

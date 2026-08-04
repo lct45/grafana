@@ -1,3 +1,5 @@
+import { createErrorNotification } from 'app/core/copy/appNotification';
+import { notifyApp } from 'app/core/reducers/appNotification';
 import { type ThunkResult } from 'app/types/store';
 
 import { changeDatasource } from '../state/datasource';
@@ -15,7 +17,13 @@ import { type ExploreBookmark } from './types';
  */
 export function openExploreBookmark(exploreId: string, bookmark: ExploreBookmark): ThunkResult<Promise<void>> {
   return async (dispatch, getState) => {
-    const currentUid = getState().explore.panes[exploreId]?.datasourceInstance?.uid;
+    const pane = getState().explore.panes[exploreId];
+    if (!pane) {
+      dispatch(notifyApp(createErrorNotification('Explore pane is no longer available')));
+      return;
+    }
+
+    const currentUid = pane.datasourceInstance?.uid;
     if (bookmark.datasourceUid !== currentUid) {
       await dispatch(
         changeDatasource({
@@ -24,6 +32,12 @@ export function openExploreBookmark(exploreId: string, bookmark: ExploreBookmark
           options: { importQueries: false },
         })
       );
+    }
+
+    // Pane may have been closed while awaiting datasource change.
+    if (!getState().explore.panes[exploreId]) {
+      dispatch(notifyApp(createErrorNotification('Explore pane is no longer available')));
+      return;
     }
 
     dispatch(
