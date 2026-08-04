@@ -1,0 +1,109 @@
+{
+  "name": "Voltshock",
+  "id": "voltshock",
+  "colors": {
+    "mode": "dark",
+    "border": {
+      "weak": "rgba(212, 255, 0, 0.10)",
+      "medium": "rgba(212, 255, 0, 0.22)",
+      "strong": "rgba(212, 255, 0, 0.40)"
+    },
+    "text": {
+      "primary": "#F4FFE0",
+      "secondary": "rgba(244, 255, 224, 0.72)",
+      "disabled": "rgba(244, 255, 224, 0.42)",
+      "link": "#D4FF00",
+      "maxContrast": "#FFFFFF"
+    },
+    "primary": {
+      "main": "#D4FF00",
+      "text": "#D4FF00",
+      "border": "#B8E000",
+      "shade": "#B8E000",
+      "transparent": "rgba(212, 255, 0, 0.14)",
+      "contrastText": "#0A0612",
+      "borderTransparent": "rgba(212, 255, 0, 0.28)"
+    },
+    "secondary": {
+      "main": "#2A1548",
+      "text": "rgba(244, 255, 224, 0.85)",
+      "border": "rgba(255, 45, 149, 0.28)",
+      "shade": "#3A1F5E",
+      "transparent": "rgba(255, 45, 149, 0.10)",
+      "contrastText": "#F4FFE0",
+      "borderTransparent": "rgba(255, 45, 149, 0.18)"
+    },
+    "tertiary": {
+      "main": "#FF2D95"
+    },
+    "accent": {
+      "main": "#FF2D95",
+      "text": "#FF2D95",
+      "border": "#E0187A",
+      "shade": "#E0187A",
+      "transparent": "rgba(255, 45, 149, 0.16)",
+      "contrastText": "#FFFFFF",
+      "borderTransparent": "rgba(255, 45, 149, 0.30)"
+    },
+    "info": {
+      "main": "#00F0FF"
+    },
+    "error": {
+      "main": "#FF3D71"
+    },
+    "success": {
+      "main": "#7CFF4D"
+    },
+    "warning": {
+      "main": "#FFB800"
+    },
+    "background": {
+      "canvas": "#07040F",
+      "page": "#0E0818",
+      "primary": "#160E28",
+      "secondary": "#22143A",
+      "elevated": "#2A1548"
+    },
+    "action": {
+      "hover": "rgba(212, 255, 0, 0.12)",
+      "selected": "rgba(255, 45, 149, 0.18)",
+      "selectedBorder": "#D4FF00",
+      "focus": "rgba(212, 255, 0, 0.22)",
+      "hoverOpacity": 0.1,
+      "disabledText": "rgba(244, 255, 224, 0.42)",
+      "disabledBackground": "rgba(212, 255, 0, 0.06)",
+      "disabledOpacity": 0.38
+    },
+    "gradients": {
+      "brandHorizontal": "linear-gradient(270deg, #D4FF00 0%, #FF2D95 55%, #00F0FF 100%)",
+      "brandVertical": "linear-gradient(0.01deg, #D4FF00 0.01%, #FF2D95 55%, #00F0FF 99.99%)"
+    },
+    "contrastThreshold": 3,
+    "hoverFactor": 0.06,
+    "tonalOffset": 0.18
+  },
+  "shape": {
+    "borderRadiusSm": 2,
+    "borderRadius": 3,
+    "borderRadiusLg": 4
+  },
+  "shadows": {
+    "z1": "0px 0px 8px rgba(212, 255, 0, 0.12)",
+    "z2": "0px 0px 18px rgba(255, 45, 149, 0.22)",
+    "z3": "0px 0px 32px rgba(212, 255, 0, 0.28)"
+  },
+  "visualization": {
+    "palette": [
+      "#D4FF00",
+      "#FF2D95",
+      "#00F0FF",
+      "#FFB800",
+      "#B44DFF",
+      "#7CFF4D",
+      "#FF3D71",
+      "#FF6EC7",
+      "#5CFFE1",
+      "#FFE566"
+    ]
+  }
+}

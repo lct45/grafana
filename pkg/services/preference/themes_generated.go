@@ -23,5 +23,6 @@ var themes = []ThemeDTO{
 	{ID: "victorian", Type: "dark", IsExtra: true},
 	{ID: "visual_refresh_dark", Type: "dark", IsExtra: true},
 	{ID: "visual_refresh_light", Type: "light", IsExtra: true},
+	{ID: "voltshock", Type: "dark", IsExtra: true},
 	{ID: "zen", Type: "light", IsExtra: true},
 }
