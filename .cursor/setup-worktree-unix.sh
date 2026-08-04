@@ -10,7 +10,8 @@ if [[ -n "${ROOT_WORKTREE_PATH:-}" && -f "$ROOT_WORKTREE_PATH/conf/custom.ini" ]
   mv conf/custom.ini.tmp conf/custom.ini
 fi
 
-if [[ -f conf/custom.ini ]] && grep -q '^\[server\]' conf/custom.ini; then
+if [[ -f conf/custom.ini ]]; then
+  # Insert under [server], or append a [server] block — never overwrite other overrides.
   awk -v p="$PORT" '
     BEGIN { done = 0 }
     /^\[server\]/ {
