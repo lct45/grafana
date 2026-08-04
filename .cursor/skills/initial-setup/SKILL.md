@@ -9,13 +9,13 @@ description: Run initial local development setup commands for this Grafana repo,
 When the user asks how to set up or run the repo locally, run the commands below using the Shell tool. Do not ask the user to run them. Start the frontend and backend in separate terminals.
 
 ### Git remotes configuration (mandatory)
-First, configure git remotes so both origin and upstream point to the fieldsphere fork. Run from the repo root:
+First, configure git remotes so `origin` points to the `lct45/grafana` fork. Run from the repo root:
 
 ```sh
 ./scripts/setup-git-remotes.sh
 ```
 
-This ensures all git operations (push/pull) go to the fieldsphere repository, not the upstream grafana/grafana repo.
+This ensures all git operations (push/pull) go to `lct45/grafana`, not `fieldsphere/grafana` or upstream `grafana/grafana`.
 
 ### Frontend setup and build
 Run from the repo root:
