@@ -1,0 +1,33 @@
+---
+description: Requirements for adding or changing Grafana backend API endpoints
+globs: **/*.go
+alwaysApply: false
+---
+
+# Backend API Endpoint Standards
+
+When adding or changing an API endpoint:
+
+- Follow routing, handler, service, and response patterns in the nearest existing API.
+- Keep business logic in the domain service rather than the HTTP handler.
+- Model URLs as plural nouns and stable resource hierarchies, such as `/api/widgets/:uid`; avoid action verbs in paths.
+- Use HTTP methods by semantics: GET reads, POST creates, PUT replaces, PATCH partially updates, and DELETE removes.
+- Keep GET, PUT, and DELETE idempotent. Do not mutate state from GET requests.
+- Use query parameters for filtering, sorting, pagination, and optional views rather than creating separate action routes.
+- Return conventional statuses: 200 for successful reads/updates, 201 plus `Location` for creation, 204 for an empty success, 400 for malformed input, 401 for unauthenticated callers, 403 for denied access, 404 for missing resources, and 409 for conflicts.
+- Keep response and error shapes consistent with neighboring Grafana APIs. Do not expose persistence models or internal error details directly.
+- Define clear PATCH behavior and reject unknown or immutable fields.
+- Require appropriate authentication and authorization for every caller role. Personal data endpoints must reject anonymous users.
+- Scope user-owned data by both organization and user identity.
+- Validate request bodies, path parameters, and length limits before persistence. Invalid client input must return a 4xx response, not a 500.
+- Use typed or sentinel validation errors instead of matching error strings.
+- Bound collection responses and large payloads with documented limits or pagination.
+- Update Swagger/OpenAPI annotations when the endpoint is externally exposed.
+- Preserve backward compatibility; version only when an incompatible contract change cannot be avoided.
+
+## Required Tests
+
+- Add targeted tests for every new request path and HTTP method.
+- Cover method semantics, status codes, malformed input, authentication, authorization, tenant isolation, not-found behavior, conflicts, and persistence failures as applicable.
+- Include idempotency and boundary tests for limits and pagination where relevant.
+- Run the narrowest relevant Go test command before finishing.
