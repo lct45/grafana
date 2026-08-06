@@ -239,7 +239,13 @@ func testUser(userID, orgID int64) *user.SignedInUser {
 	}
 }
 
-func sendRequest(t *testing.T, server *webtest.Server, signedInUser *user.SignedInUser, method, path string, body any) *http.Response {
+type testResponse struct {
+	StatusCode int
+	Header     http.Header
+	Body       []byte
+}
+
+func sendRequest(t *testing.T, server *webtest.Server, signedInUser *user.SignedInUser, method, path string, body any) testResponse {
 	t.Helper()
 	var reader io.Reader
 	if body != nil {
@@ -250,12 +256,12 @@ func sendRequest(t *testing.T, server *webtest.Server, signedInUser *user.Signed
 	return send(t, server, signedInUser, method, path, reader)
 }
 
-func sendRawRequest(t *testing.T, server *webtest.Server, signedInUser *user.SignedInUser, method, path, body string) *http.Response {
+func sendRawRequest(t *testing.T, server *webtest.Server, signedInUser *user.SignedInUser, method, path, body string) testResponse {
 	t.Helper()
 	return send(t, server, signedInUser, method, path, strings.NewReader(body))
 }
 
-func send(t *testing.T, server *webtest.Server, signedInUser *user.SignedInUser, method, path string, body io.Reader) *http.Response {
+func send(t *testing.T, server *webtest.Server, signedInUser *user.SignedInUser, method, path string, body io.Reader) testResponse {
 	t.Helper()
 	req := server.NewRequest(method, path, body)
 	if body != nil {
@@ -266,22 +272,26 @@ func send(t *testing.T, server *webtest.Server, signedInUser *user.SignedInUser,
 	}
 	resp, err := server.Send(req)
 	require.NoError(t, err)
-	t.Cleanup(func() {
-		require.NoError(t, resp.Body.Close())
-	})
-	return resp
+	responseBody, err := io.ReadAll(resp.Body)
+	require.NoError(t, err)
+	require.NoError(t, resp.Body.Close())
+	return testResponse{
+		StatusCode: resp.StatusCode,
+		Header:     resp.Header,
+		Body:       responseBody,
+	}
 }
 
-func decodeItemResponse(t *testing.T, resp *http.Response) RecentItemResponse {
+func decodeItemResponse(t *testing.T, resp testResponse) RecentItemResponse {
 	t.Helper()
 	var result RecentItemResponse
-	require.NoError(t, json.NewDecoder(resp.Body).Decode(&result))
+	require.NoError(t, json.Unmarshal(resp.Body, &result))
 	return result
 }
 
-func decodeItemsResponse(t *testing.T, resp *http.Response) RecentItemsResponse {
+func decodeItemsResponse(t *testing.T, resp testResponse) RecentItemsResponse {
 	t.Helper()
 	var result RecentItemsResponse
-	require.NoError(t, json.NewDecoder(resp.Body).Decode(&result))
+	require.NoError(t, json.Unmarshal(resp.Body, &result))
 	return result
 }
