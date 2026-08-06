@@ -13,6 +13,7 @@ var themes = []ThemeDTO{
 	{ID: "deut_prot_light", Type: "light", IsExtra: true},
 	{ID: "gildedgrove", Type: "dark", IsExtra: true},
 	{ID: "gloom", Type: "dark", IsExtra: true},
+	{ID: "harbor", Type: "dark"},
 	{ID: "mars", Type: "dark", IsExtra: true},
 	{ID: "matrix", Type: "dark", IsExtra: true},
 	{ID: "sapphiredusk", Type: "dark", IsExtra: true},

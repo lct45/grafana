@@ -1,0 +1,87 @@
+{
+  "name": "Harbor",
+  "id": "harbor",
+  "colors": {
+    "mode": "dark",
+    "border": {
+      "weak": "#243041",
+      "medium": "#2f3d52",
+      "strong": "#3d4f68"
+    },
+    "text": {
+      "primary": "#E8EEF4",
+      "secondary": "#9BAEC4",
+      "disabled": "#6B7D92",
+      "link": "#3DD6C6",
+      "maxContrast": "#FFFFFF"
+    },
+    "primary": {
+      "main": "#2DD4BF",
+      "text": "#5EEAD4",
+      "border": "#2DD4BF",
+      "name": "primary",
+      "shade": "#14B8A6",
+      "transparent": "#2DD4BF29",
+      "contrastText": "#0F172A",
+      "borderTransparent": "#2DD4BF40"
+    },
+    "secondary": {
+      "main": "#2A3547",
+      "shade": "#344055",
+      "transparent": "rgba(155, 174, 196, 0.08)",
+      "text": "#C5D4E3",
+      "contrastText": "#E8EEF4",
+      "border": "rgba(155, 174, 196, 0.12)",
+      "name": "secondary",
+      "borderTransparent": "rgba(155, 174, 196, 0.25)"
+    },
+    "accent": {
+      "main": "#2DD4BF",
+      "text": "#5EEAD4",
+      "border": "#2DD4BF",
+      "name": "accent",
+      "shade": "#14B8A6",
+      "transparent": "#2DD4BF29",
+      "contrastText": "#0F172A",
+      "borderTransparent": "#2DD4BF40"
+    },
+    "info": {
+      "main": "#3B82F6",
+      "text": "#93C5FD",
+      "border": "#2563EB"
+    },
+    "error": {
+      "main": "#F87171"
+    },
+    "success": {
+      "main": "#34D399"
+    },
+    "warning": {
+      "main": "#FBBF24"
+    },
+    "background": {
+      "canvas": "#1A2332",
+      "page": "#151C28",
+      "primary": "#121822",
+      "secondary": "#232D3D",
+      "elevated": "#232D3D"
+    },
+    "action": {
+      "hover": "#2F3D52",
+      "selected": "#344055",
+      "selectedBorder": "#2DD4BF",
+      "focus": "#2F3D52",
+      "hoverOpacity": 0.08,
+      "disabledText": "#6B7D92",
+      "disabledBackground": "rgba(47, 61, 82, 0.35)",
+      "disabledOpacity": 0.38
+    },
+    "gradients": {
+      "brandHorizontal": "linear-gradient(270deg, #14B8A6 0%, #0891B2 100%)",
+      "brandVertical": "linear-gradient(0deg, #14B8A6 0%, #0891B2 100%)"
+    },
+    "contrastThreshold": 3,
+    "hoverFactor": 0.03,
+    "tonalOffset": 0.15
+  }
+}

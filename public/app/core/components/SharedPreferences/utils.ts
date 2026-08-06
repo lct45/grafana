@@ -73,6 +73,8 @@ export const getTranslatedThemeName = (theme: ThemeRegistryItem) => {
       return t('shared.preferences.theme.light-label', 'Light');
     case 'system':
       return t('shared.preferences.theme.system-label', 'System preference');
+    case 'harbor':
+      return t('shared.preferences.theme.harbor-label', 'Harbor');
     default:
       return theme.name;
   }

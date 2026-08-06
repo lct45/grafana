@@ -8,6 +8,7 @@ import deut_prot_dark from './themeDefinitions/deut_prot_dark.json';
 import deut_prot_light from './themeDefinitions/deut_prot_light.json';
 import gildedgrove from './themeDefinitions/gildedgrove.json';
 import gloom from './themeDefinitions/gloom.json';
+import harbor from './themeDefinitions/harbor.json';
 import mars from './themeDefinitions/mars.json';
 import matrix from './themeDefinitions/matrix.json';
 import sapphiredusk from './themeDefinitions/sapphiredusk.json';
@@ -80,11 +81,14 @@ export function getBuiltInThemes(allowedExtras: string[]) {
   return sortedThemes;
 }
 
+const harborTheme = NewThemeOptionsSchema.parse(harbor);
+
 const themeRegistry = new Registry<ThemeRegistryItem>(() => {
   return [
     { id: 'system', name: 'System preference', build: getSystemPreferenceTheme },
     { id: 'dark', name: 'Dark', build: () => createTheme({ colors: { mode: 'dark' } }) },
     { id: 'light', name: 'Light', build: () => createTheme({ colors: { mode: 'light' } }) },
+    { id: harborTheme.id, name: harborTheme.name, build: () => createTheme(harborTheme) },
   ];
 });
 

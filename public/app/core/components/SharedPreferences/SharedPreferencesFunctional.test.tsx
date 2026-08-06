@@ -151,6 +151,22 @@ describe('SharedPreferencesFunctional', () => {
     });
   });
 
+  it('saves the harbor theme preference', async () => {
+    const capture = captureRequests();
+    const { user } = await setup();
+
+    await selectComboboxOptionInTest(await screen.findByRole('combobox', { name: /Interface theme/ }), 'Harbor');
+
+    await user.click(screen.getByText('Save preferences'));
+
+    const requests = await capture;
+    const newPreferences = await getPrefsUpdateRequest(requests);
+
+    expect(newPreferences).toMatchObject({
+      spec: { theme: 'harbor' },
+    });
+  });
+
   it('saves the users default preferences', async () => {
     const capture = captureRequests();
     const { user } = await setup();

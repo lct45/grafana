@@ -67,6 +67,12 @@ var themes = []ThemeDTO{
 			themeType = themeDef.Colors.Mode
 		}
 
+		// First-class themes are registered in the frontend registry without isExtra.
+		if themeId == "harbor" {
+			output += fmt.Sprintf("\t{ID: %q, Type: %q},\n", themeId, themeType)
+			return nil
+		}
+
 		output += fmt.Sprintf("\t{ID: %q, Type: %q, IsExtra: true},\n", themeId, themeType)
 
 		return nil
