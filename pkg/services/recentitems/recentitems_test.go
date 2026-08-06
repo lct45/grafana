@@ -15,6 +15,7 @@ import (
 
 	"github.com/grafana/grafana/pkg/api/routing"
 	"github.com/grafana/grafana/pkg/infra/db"
+	contextmodel "github.com/grafana/grafana/pkg/services/contexthandler/model"
 	"github.com/grafana/grafana/pkg/services/org"
 	"github.com/grafana/grafana/pkg/services/user"
 	"github.com/grafana/grafana/pkg/tests/testsuite"
@@ -35,6 +36,18 @@ func TestRecentItemsAPI(t *testing.T) {
 
 	t.Run("rejects unauthenticated requests", func(t *testing.T) {
 		resp := sendRequest(t, server, nil, http.MethodGet, "/api/user/recent-items/", nil)
+		require.Equal(t, http.StatusUnauthorized, resp.StatusCode)
+	})
+
+	t.Run("rejects anonymous users", func(t *testing.T) {
+		req := server.NewGetRequest("/api/user/recent-items/")
+		req = webtest.RequestWithWebContext(req, &contextmodel.ReqContext{
+			AllowAnonymous: true,
+			SignedInUser:   &user.SignedInUser{IsAnonymous: true, OrgID: 1},
+		})
+		resp, err := server.Send(req)
+		require.NoError(t, err)
+		require.NoError(t, resp.Body.Close())
 		require.Equal(t, http.StatusUnauthorized, resp.StatusCode)
 	})
 

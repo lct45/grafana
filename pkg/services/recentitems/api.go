@@ -17,10 +17,10 @@ import (
 
 func (s *ServiceImpl) registerAPIEndpoints() {
 	s.routeRegister.Group("/api/user/recent-items", func(items routing.RouteRegister) {
-		items.Post("/", middleware.ReqSignedIn, routing.Wrap(s.createHandler))
-		items.Get("/", middleware.ReqSignedIn, routing.Wrap(s.listHandler))
-		items.Patch("/:uid", middleware.ReqSignedIn, routing.Wrap(s.patchHandler))
-		items.Delete("/:uid", middleware.ReqSignedIn, routing.Wrap(s.deleteHandler))
+		items.Post("/", middleware.ReqSignedInNoAnonymous, routing.Wrap(s.createHandler))
+		items.Get("/", middleware.ReqSignedInNoAnonymous, routing.Wrap(s.listHandler))
+		items.Patch("/:uid", middleware.ReqSignedInNoAnonymous, routing.Wrap(s.patchHandler))
+		items.Delete("/:uid", middleware.ReqSignedInNoAnonymous, routing.Wrap(s.deleteHandler))
 	})
 }
 
