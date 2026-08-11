@@ -3,11 +3,13 @@ import { Provider } from 'react-redux';
 import { act, renderHook, waitFor } from '@testing-library/react';
 
 import { dateTime } from '@grafana/data';
+import { type DataQuery } from '@grafana/schema';
 import { configureStore } from 'app/store/configureStore';
 
 import { makeExplorePaneState } from '../state/utils';
 
 import * as exploreBookmarkApi from './api';
+import { type ExploreBookmark } from './types';
 import { useExploreBookmarks } from './useExploreBookmarks';
 
 jest.mock('./api');
@@ -21,11 +23,11 @@ jest.mock('../state/query', () => {
   };
 });
 
-const mockBookmark = {
+const mockBookmark: ExploreBookmark = {
   uid: 'abc123',
   name: 'CPU usage',
   datasourceUid: 'prometheus',
-  queries: [{ refId: 'A', expr: 'up' }],
+  queries: [{ refId: 'A', expr: 'up' } as DataQuery],
   timeRange: {
     from: String(dateTime('2024-01-15T10:00:00.000Z').valueOf()),
     to: String(dateTime('2024-01-15T11:00:00.000Z').valueOf()),
@@ -41,7 +43,7 @@ function createWrapper(rawRange: {
     explore: {
       panes: {
         left: makeExplorePaneState({
-          queries: [{ refId: 'A', expr: 'rate(http_requests[5m])' }],
+          queries: [{ refId: 'A', expr: 'rate(http_requests[5m])' } as DataQuery],
           range: {
             from: dateTime(),
             to: dateTime(),

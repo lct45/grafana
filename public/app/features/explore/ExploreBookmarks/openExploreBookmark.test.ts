@@ -1,3 +1,5 @@
+import { type DataQuery } from '@grafana/schema';
+
 import { openExploreBookmark } from './openExploreBookmark';
 import { type ExploreBookmark } from './types';
 
@@ -23,14 +25,14 @@ const bookmark: ExploreBookmark = {
   uid: 'abc123',
   name: 'CPU usage',
   datasourceUid: 'prometheus',
-  queries: [{ refId: 'A', expr: 'up' }],
+  queries: [{ refId: 'A', expr: 'up' } as DataQuery],
   timeRange: { from: 'now-6h', to: 'now' },
   createdAt: 1,
 };
 
 describe('openExploreBookmark', () => {
   it('no-ops when the explore pane no longer exists', async () => {
-    const dispatch = jest.fn((action) => {
+    const dispatch: jest.Mock = jest.fn((action: unknown) => {
       if (typeof action === 'function') {
         return action(dispatch, () => ({ explore: { panes: {} } }));
       }

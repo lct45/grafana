@@ -1,6 +1,9 @@
 import { getBackendSrv } from '@grafana/runtime';
+import { type DataQuery } from '@grafana/schema';
 
 import { createExploreBookmark, deleteExploreBookmark, listExploreBookmarks } from './api';
+
+const sampleQuery = { refId: 'A', expr: 'up' } as DataQuery;
 
 jest.mock('@grafana/runtime', () => ({
   ...jest.requireActual('@grafana/runtime'),
@@ -25,7 +28,7 @@ describe('explore bookmarks api', () => {
         uid: 'abc123',
         name: 'CPU usage',
         datasourceUid: 'prometheus',
-        queries: [{ refId: 'A', expr: 'up' }],
+        queries: [sampleQuery],
         timeRange: { from: 'now-6h', to: 'now' },
         createdAt: 1,
       },
@@ -34,14 +37,14 @@ describe('explore bookmarks api', () => {
     const result = await createExploreBookmark({
       name: 'CPU usage',
       datasourceUid: 'prometheus',
-      queries: [{ refId: 'A', expr: 'up' }],
+      queries: [sampleQuery],
       timeRange: { from: 'now-6h', to: 'now' },
     });
 
     expect(backendSrv.post).toHaveBeenCalledWith('/api/explore/bookmarks', {
       name: 'CPU usage',
       datasourceUid: 'prometheus',
-      queries: [{ refId: 'A', expr: 'up' }],
+      queries: [sampleQuery],
       timeRange: { from: 'now-6h', to: 'now' },
     });
     expect(result.uid).toBe('abc123');
