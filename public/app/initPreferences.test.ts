@@ -198,6 +198,23 @@ describe('applyTheme', () => {
     expect(link.getAttribute('href')).toBe('light.css');
   });
 
+  it('applies Harbor as a dark theme after loading saved preferences', async () => {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'light.css';
+    document.head.appendChild(link);
+
+    server.use(http.get(PREFERENCES_URL, () => HttpResponse.json({ spec: { theme: 'harbor' } })));
+
+    await initPreferences();
+
+    expect(window.grafanaBootData.user.theme).toBe('harbor');
+    expect(window.grafanaBootData.user.lightTheme).toBe(false);
+    expect(document.body.classList.contains('theme-dark')).toBe(true);
+    expect(document.body.classList.contains('theme-light')).toBe(false);
+    expect(link.getAttribute('href')).toBe('dark.css');
+  });
+
   it.each([
     { prefersDark: true, expectedClass: 'theme-dark', otherClass: 'theme-light' },
     { prefersDark: false, expectedClass: 'theme-light', otherClass: 'theme-dark' },
