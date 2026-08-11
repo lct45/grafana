@@ -108,6 +108,7 @@ import (
 	"github.com/grafana/grafana/pkg/services/encryption"
 	encryptionservice "github.com/grafana/grafana/pkg/services/encryption/service"
 	"github.com/grafana/grafana/pkg/services/explorebookmarks"
+	"github.com/grafana/grafana/pkg/services/homepins"
 	"github.com/grafana/grafana/pkg/services/extsvcauth"
 	extsvcreg "github.com/grafana/grafana/pkg/services/extsvcauth/registry"
 	"github.com/grafana/grafana/pkg/services/featuremgmt"
@@ -278,6 +279,8 @@ var wireBasicSet = wire.NewSet(
 	wire.Bind(new(queryhistory.Service), new(*queryhistory.QueryHistoryService)),
 	explorebookmarks.ProvideService,
 	wire.Bind(new(explorebookmarks.Service), new(*explorebookmarks.ExploreBookmarksService)),
+	homepins.ProvideService,
+	wire.Bind(new(homepins.Service), new(*homepins.HomePinsService)),
 	correlations.ProvideService,
 	wire.Bind(new(correlations.Service), new(*correlations.CorrelationsService)),
 	quotaimpl.ProvideService,

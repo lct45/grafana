@@ -8,6 +8,8 @@ import { ScrollContainer, Stack, Tab, TabContent, TabsBar, useStyles2 } from '@g
 import { SETUPGUIDE_PLUGIN_ID } from 'app/core/constants';
 import { getMostUsedDashboards, isMostUsedAvailable } from 'app/features/browse-dashboards/api/mostUsed';
 import { getRecentlyViewedDashboards } from 'app/features/browse-dashboards/api/recentlyViewed';
+import { getPinnedDashboards } from 'app/features/home/DashboardPins/getPinnedDashboards';
+import { reorderDashboardPins, deleteDashboardPin, updateDashboardPin } from 'app/features/home/DashboardPins/api';
 import { useDashboardLocationInfo } from 'app/features/search/hooks/useDashboardLocationInfo';
 import { getGrafanaSearcher } from 'app/features/search/service/searcher';
 
@@ -15,17 +17,19 @@ import { tabChanged } from '../analytics/main';
 
 import { DashboardTabsSkeleton } from './DashboardTabsSkeleton';
 import { MostUsedDashboardsTab } from './MostUsedDashboardsTab';
+import { PinnedDashboardsTab } from './PinnedDashboardsTab';
 import { RecentDashboardsTab } from './RecentDashboardsTab';
 import { StarredDashboardsTab } from './StarredDashboardsTab';
 import { type HomepageTabExtensionProps, type HomepageTab, validateHomepageTab } from './types';
 
+const PINNED_TAB_ID = 'pinned';
 const RECENT_TAB_ID = 'recent';
 const MOST_USED_TAB_ID = 'most-used';
 const STARRED_TAB_ID = 'starred';
 const MAX_RECENT = 20;
 const MAX_MOST_USED = 20;
 const MAX_STARRED = 30;
-const DEFAULT_TAB_IDS = [RECENT_TAB_ID, MOST_USED_TAB_ID, STARRED_TAB_ID];
+const DEFAULT_TAB_IDS = [PINNED_TAB_ID, RECENT_TAB_ID, MOST_USED_TAB_ID, STARRED_TAB_ID];
 
 function DashboardExtensionTab({
   Component,
@@ -61,9 +65,16 @@ interface Props {
 
 export function DashboardTabs({ extensionComponents }: Props) {
   const styles = useStyles2(getStyles);
-  const [activeTab, setActiveTab] = useState(RECENT_TAB_ID);
+  const [activeTab, setActiveTab] = useState(PINNED_TAB_ID);
   const [extensionTabs, setExtensionTabs] = useState<HomepageTab[]>([]);
   const [initialLoadDone, setInitialLoadDone] = useState(false);
+
+  const {
+    value: pinnedDashboards,
+    loading: pinnedLoading,
+    error: pinnedError,
+    retry: pinnedRetry,
+  } = useAsyncRetry(() => getPinnedDashboards(), []);
 
   const {
     value: recentDashboards,
@@ -94,12 +105,13 @@ export function DashboardTabs({ extensionComponents }: Props) {
     [mostUsedAvailable]
   );
 
+  const hasPinned = !!pinnedDashboards?.length;
   const hasRecent = !!recentDashboards?.length;
   const hasMostUsed = mostUsedAvailable && !!mostUsedDashboards?.length;
   const hasStarred = !!starredDashboards?.length;
-  const initialLoading = recentLoading || starredLoading || (mostUsedAvailable && mostUsedLoading);
+  const initialLoading = pinnedLoading || recentLoading || starredLoading || (mostUsedAvailable && mostUsedLoading);
 
-  const hasDashboards = hasRecent || hasMostUsed || hasStarred;
+  const hasDashboards = hasPinned || hasRecent || hasMostUsed || hasStarred;
   const { foldersByUid } = useDashboardLocationInfo(hasDashboards);
 
   const registerTab = useCallback((tab: HomepageTab) => {
@@ -113,6 +125,7 @@ export function DashboardTabs({ extensionComponents }: Props) {
   // Tabs worth landing on, in display order: default tabs with content, then non-link extension tabs.
   const selectableTabs = useMemo(
     () => [
+      PINNED_TAB_ID,
       ...(hasRecent ? [RECENT_TAB_ID] : []),
       ...(hasMostUsed ? [MOST_USED_TAB_ID] : []),
       ...(hasStarred ? [STARRED_TAB_ID] : []),
@@ -152,6 +165,12 @@ export function DashboardTabs({ extensionComponents }: Props) {
   }
 
   const builtInTabs: HomepageTab[] = [
+    {
+      id: PINNED_TAB_ID,
+      label: t('home.dashboard-tabs.pinned', 'Pinned'),
+      activeLabel: t('home.dashboard-tabs.pinned-active', 'Pinned dashboards'),
+      counter: pinnedDashboards?.length,
+    },
     {
       id: RECENT_TAB_ID,
       label: t('home.dashboard-tabs.recent', 'Recent'),
@@ -208,6 +227,27 @@ export function DashboardTabs({ extensionComponents }: Props) {
       {DEFAULT_TAB_IDS.includes(activeTab) && (
         <TabContent className={styles.tabContent}>
           <ScrollContainer showScrollIndicators maxHeight="256px" minHeight="256px">
+            {activeTab === PINNED_TAB_ID && (
+              <PinnedDashboardsTab
+                dashboards={pinnedDashboards ?? []}
+                loading={pinnedLoading}
+                error={pinnedError}
+                retry={pinnedRetry}
+                foldersByUid={foldersByUid}
+                onReorder={async (uids) => {
+                  await reorderDashboardPins({ uids });
+                  pinnedRetry();
+                }}
+                onUnpin={async (pinUid) => {
+                  await deleteDashboardPin(pinUid);
+                  pinnedRetry();
+                }}
+                onUpdateNote={async (pinUid, note) => {
+                  await updateDashboardPin(pinUid, { note });
+                  pinnedRetry();
+                }}
+              />
+            )}
             {activeTab === RECENT_TAB_ID && (
               <RecentDashboardsTab
                 dashboards={recentDashboards ?? []}

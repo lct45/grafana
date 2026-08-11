@@ -5,6 +5,7 @@ import { type DashboardScene } from '../DashboardScene';
 import { ManagedDashboardNavBarBadge } from '../ManagedDashboardNavBarBadge';
 
 import { OpenSnapshotOriginButton } from './actions/OpenSnapshotOriginButton';
+import { PinButton } from './actions/PinButton';
 import { PublicDashboardBadge } from './actions/PublicDashboardBadge';
 import { StarButton } from './actions/StarButton';
 import { getDynamicActions, renderActionElements } from './utils';
@@ -32,6 +33,12 @@ export const BreadcrumbActions = ({ dashboard }: { dashboard: DashboardScene }) 
         component: StarButton,
         group: 'actions',
         condition: hasUid && canStar && isShowingDashboard && !isEditingDashboard,
+      },
+      {
+        key: 'pin-button',
+        component: PinButton,
+        group: 'actions',
+        condition: hasUid && isShowingDashboard && !isEditingDashboard,
       },
       {
         key: 'public-dashboard-badge',

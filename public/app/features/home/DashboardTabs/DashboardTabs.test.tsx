@@ -65,10 +65,17 @@ function seedStars(uids: string[]) {
   server.use(http.get('/api/user/stars', () => HttpResponse.json(uids)));
 }
 
+function seedPins(
+  pins: Array<{ uid: string; dashboardUid: string; sortOrder: number; note?: string; createdAt?: number; updatedAt?: number }> = []
+) {
+  server.use(http.get('/api/home/dashboard-pins', () => HttpResponse.json({ pins })));
+}
+
 beforeEach(() => {
   jest.clearAllMocks();
   window.localStorage.removeItem(impressionKey);
   seedStars([]);
+  seedPins([]);
   config.licenseInfo.enabledFeatures = {};
 });
 
@@ -93,13 +100,15 @@ const createDashboardTabsExtensionComponent = (
   ) as ComponentTypeWithExtensionMeta<HomepageTabExtensionProps>;
 
 describe('DashboardTabs', () => {
-  it('renders Recent tab as active by default and shows recent dashboards', async () => {
+  it('renders Pinned tab as active by default and shows recent dashboards after switching tabs', async () => {
     seedRecent(['recent-1', 'recent-2']);
     server.use(getCustomSearchHandler([...recentHits, ...starredHits]));
 
-    render(<DashboardTabs extensionComponents={[]} />);
+    const { user } = render(<DashboardTabs extensionComponents={[]} />);
 
-    expect(await screen.findByRole('tab', { name: /recent/i, selected: true })).toBeInTheDocument();
+    expect(await screen.findByRole('tab', { name: /pinned/i, selected: true })).toBeInTheDocument();
+
+    await user.click(screen.getByRole('tab', { name: /recent/i }));
 
     expect(await screen.findByText('Recent Dashboard 1')).toBeInTheDocument();
     expect(screen.getByText('Recent Dashboard 2')).toBeInTheDocument();
@@ -115,19 +124,22 @@ describe('DashboardTabs', () => {
     expect(screen.getByTestId('dashboard-tabs-skeleton')).toBeInTheDocument();
     expect(screen.queryByRole('tab')).not.toBeInTheDocument();
 
-    expect(await screen.findByRole('tab', { name: /recent/i, selected: true })).toBeInTheDocument();
+    expect(await screen.findByRole('tab', { name: /pinned/i, selected: true })).toBeInTheDocument();
     expect(screen.queryByTestId('dashboard-tabs-skeleton')).not.toBeInTheDocument();
   });
 
-  it('lands directly on Starred when Recent is empty, without flashing the Recent tab', async () => {
+  it('lands directly on Starred when Recent and Pinned are empty, without flashing the Recent tab', async () => {
     // no recent seeded; starred has items (analytics off by default → no most-used tab)
     seedStars(['starred-1', 'starred-2', 'starred-3']);
     server.use(getCustomSearchHandler([...starredHits]));
 
-    render(<DashboardTabs extensionComponents={[]} />);
+    const { user } = render(<DashboardTabs extensionComponents={[]} />);
 
-    // the first tab bar shown is already on Starred — no Recent→Starred flip
-    expect(await screen.findByRole('tab', { name: /starred/i, selected: true })).toBeInTheDocument();
+    expect(await screen.findByRole('tab', { name: /pinned/i, selected: true })).toBeInTheDocument();
+
+    await user.click(screen.getByRole('tab', { name: /starred/i }));
+
+    expect(screen.getByRole('tab', { name: /starred/i })).toHaveAttribute('aria-selected', 'true');
     expect(screen.getByRole('tab', { name: /recent/i })).toHaveAttribute('aria-selected', 'false');
   });
 
@@ -147,7 +159,9 @@ describe('DashboardTabs', () => {
   });
 
   it('shows empty state when no recent dashboards', async () => {
-    render(<DashboardTabs extensionComponents={[]} />);
+    const { user } = render(<DashboardTabs extensionComponents={[]} />);
+
+    await user.click(await screen.findByRole('tab', { name: /recent/i }));
 
     expect(await screen.findByText("Dashboards you've recently viewed will appear here.")).toBeInTheDocument();
   });
@@ -168,7 +182,8 @@ describe('DashboardTabs', () => {
 
     const { user } = render(<DashboardTabs extensionComponents={[]} />);
 
-    expect(await screen.findByRole('tab', { name: /recent/i, selected: true })).toBeInTheDocument();
+    await user.click(await screen.findByRole('tab', { name: /recent/i }));
+    expect(screen.getByRole('tab', { name: /recent/i })).toHaveAttribute('aria-selected', 'true');
 
     await user.click(screen.getByRole('tab', { name: /starred/i }));
 
@@ -216,7 +231,9 @@ describe('DashboardTabs', () => {
       seedRecent(['recent-1', 'recent-2']);
       server.use(getCustomSearchHandler(allHits));
 
-      render(<DashboardTabs extensionComponents={[]} />);
+      const { user } = render(<DashboardTabs extensionComponents={[]} />);
+
+      await user.click(await screen.findByRole('tab', { name: /recent/i }));
 
       expect(await screen.findByText('Recent Dashboard 1')).toBeInTheDocument();
 
@@ -241,24 +258,24 @@ describe('DashboardTabs', () => {
       // No recent dashboards seeded
       server.use(getCustomSearchHandler(allHits));
 
-      render(<DashboardTabs extensionComponents={[]} />);
+      const { user } = render(<DashboardTabs extensionComponents={[]} />);
 
-      expect(await screen.findByRole('tab', { name: /most used/i, selected: true })).toBeInTheDocument();
+      await user.click(await screen.findByRole('tab', { name: /most used/i }));
+
+      expect(screen.getByRole('tab', { name: /most used/i })).toHaveAttribute('aria-selected', 'true');
 
       expect(await screen.findByText('Most Used Dashboard 1')).toBeInTheDocument();
       expect(screen.getByText('Most Used Dashboard 2')).toBeInTheDocument();
     });
 
-    it('stays on Recent when recent has items even with most-used available', async () => {
+    it('stays on Pinned when recent has items even with most-used available', async () => {
       config.licenseInfo.enabledFeatures = { analytics: true };
       seedRecent(['recent-1', 'recent-2']);
       server.use(getCustomSearchHandler(allHits));
 
       render(<DashboardTabs extensionComponents={[]} />);
 
-      expect(await screen.findByText('Recent Dashboard 1')).toBeInTheDocument();
-
-      expect(screen.getByRole('tab', { name: /recent/i })).toHaveAttribute('aria-selected', 'true');
+      expect(await screen.findByRole('tab', { name: /pinned/i, selected: true })).toBeInTheDocument();
     });
 
     it('tracks a user click on the Most used tab', async () => {
@@ -310,7 +327,7 @@ describe('DashboardTabs', () => {
     const { user } = render(<DashboardTabs extensionComponents={extensionComponents} />);
 
     expect(await screen.findByRole('tab', { name: 'Plugin Tab 1' })).toBeInTheDocument();
-    expect(await screen.findByRole('tab', { name: 'Plugin Tab 1', selected: true })).toBeInTheDocument();
+    expect(await screen.findByRole('tab', { name: /pinned/i, selected: true })).toBeInTheDocument();
     expect(await screen.findByRole('tab', { name: 'Plugin Tab 2' })).toBeInTheDocument();
     expect(screen.queryByRole('tab', { name: 'Plugin Tab 3' })).not.toBeInTheDocument();
 

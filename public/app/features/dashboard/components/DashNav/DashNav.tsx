@@ -28,6 +28,7 @@ import { DashboardInteractions } from 'app/features/dashboard-scene/utils/intera
 import { playlistSrv } from 'app/features/playlist/PlaylistSrv';
 import { updateTimeZoneForSession } from 'app/features/profile/state/reducers';
 import { StarToolbarButton } from 'app/features/stars/StarToolbarButton';
+import { PinToolbarButton } from 'app/features/home/DashboardPins/PinToolbarButton';
 import { type KioskMode } from 'app/types/dashboard';
 import { DashboardMetaChangedEvent, ShowModalReactEvent } from 'app/types/events';
 
@@ -165,6 +166,12 @@ const DashNav = memo<Props>((props) => {
           title={dashboard.title}
           id={dashboard.uid}
         />
+      );
+    }
+
+    if (dashboard.uid) {
+      buttons.push(
+        <PinToolbarButton key="button-pin" dashboardUid={dashboard.uid} title={dashboard.title} />
       );
     }
 
