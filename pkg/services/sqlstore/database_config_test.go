@@ -139,6 +139,34 @@ func makeDatabaseTestConfig(t *testing.T, tc databaseConfigTest) *setting.Cfg {
 
 	return cfg
 }
+func TestDevenvPostgresDatabaseConfigFromEnv(t *testing.T) {
+	t.Setenv("GF_DATABASE_TYPE", "postgres")
+	t.Setenv("GF_DATABASE_HOST", "127.0.0.1:5432")
+	t.Setenv("GF_DATABASE_NAME", "grafana")
+	t.Setenv("GF_DATABASE_USER", "grafana")
+	t.Setenv("GF_DATABASE_PASSWORD", "password")
+	t.Setenv("GF_DATABASE_SSL_MODE", "disable")
+
+	cfg := setting.NewCfg()
+	err := cfg.Load(setting.CommandLineArgs{HomePath: "../../../"})
+	require.NoError(t, err)
+
+	dbCfg, err := NewDatabaseConfig(cfg, featuremgmt.WithFeatures())
+	require.NoError(t, err)
+
+	require.Equal(t, migrator.Postgres, dbCfg.Type)
+	require.Equal(t, "127.0.0.1:5432", dbCfg.Host)
+	require.Equal(t, "grafana", dbCfg.Name)
+	require.Equal(t, "grafana", dbCfg.User)
+	require.Equal(t, "password", dbCfg.Pwd)
+	require.Equal(t, "disable", dbCfg.SslMode)
+	require.Equal(
+		t,
+		"user=grafana host=127.0.0.1 port=5432 dbname=grafana sslmode=disable sslcert='' sslkey='' sslrootcert='' password=password",
+		dbCfg.ConnectionString,
+	)
+}
+
 func TestBuildConnectionStringPostgres(t *testing.T) {
 	testCases := []struct {
 		name            string

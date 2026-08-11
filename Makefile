@@ -762,6 +762,18 @@ devenv-postgres:
 	@cd devenv; \
 	sources=postgres_tests
 
+.PHONY: devenv-postgres-dev
+devenv-postgres-dev: ## Start Postgres for local Grafana development (devenv postgres block).
+	@./scripts/devenv-postgres/start-postgres.sh
+
+.PHONY: run-postgres
+run-postgres: devenv-postgres-dev ## Run Grafana backend with Postgres via GF_DATABASE_* env vars.
+	@./scripts/devenv-postgres/run-grafana.sh
+
+.PHONY: verify-postgres-dev
+verify-postgres-dev: ## Build Grafana, start it against Postgres, and smoke-test /api/health and /login.
+	@./scripts/devenv-postgres/verify.sh
+
 .PHONY: devenv-mysql
 devenv-mysql:
 	@cd devenv; \
