@@ -52,7 +52,7 @@ func TestAPIBuilder_Validate(t *testing.T) {
 		},
 		{
 			name:     "valid create with built-in theme",
-			obj:      newPrefs(preferences.PreferencesSpec{Theme: new("dark")}),
+			obj:      newPrefs(preferences.PreferencesSpec{Theme: new("harbor")}),
 			op:       admission.Create,
 			resource: prefsGVR,
 		},

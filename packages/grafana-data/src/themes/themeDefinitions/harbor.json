@@ -1,0 +1,82 @@
+{
+  "name": "Harbor",
+  "id": "harbor",
+  "colors": {
+    "mode": "dark",
+    "background": {
+      "canvas": "#09141e",
+      "page": "#0d1b27",
+      "primary": "#122433",
+      "secondary": "#183044",
+      "elevated": "#1e3a4d"
+    },
+    "primary": {
+      "main": "#2dd4bf",
+      "text": "#5eead4",
+      "border": "#2dd4bf"
+    },
+    "secondary": {
+      "main": "#26475b",
+      "shade": "#315b70",
+      "transparent": "rgba(173, 193, 204, 0.1)",
+      "text": "#d6e4ea",
+      "contrastText": "#edf6f8",
+      "border": "#35596d"
+    },
+    "tertiary": {
+      "main": "#699ef5",
+      "text": "#8eb8fe"
+    },
+    "accent": {
+      "main": "#2dd4bf",
+      "text": "#5eead4",
+      "border": "#2dd4bf"
+    },
+    "info": {
+      "main": "#43b2e1",
+      "text": "#72c7ee",
+      "border": "#0c6383"
+    },
+    "error": {
+      "main": "#f47b74",
+      "text": "#fe9b93",
+      "border": "#70312e"
+    },
+    "success": {
+      "main": "#68b88f",
+      "text": "#90ceac",
+      "border": "#294b39"
+    },
+    "warning": {
+      "main": "#d6a20a",
+      "text": "#e4b750",
+      "border": "#5e4608"
+    },
+    "text": {
+      "primary": "#edf6f8",
+      "secondary": "#adc1cc",
+      "disabled": "#78909c",
+      "link": "#5eead4",
+      "maxContrast": "#ffffff"
+    },
+    "border": {
+      "weak": "#294457",
+      "medium": "#3a5b70",
+      "strong": "#52758a"
+    },
+    "action": {
+      "hover": "rgba(94, 234, 212, 0.12)",
+      "selected": "rgba(45, 212, 191, 0.16)",
+      "selectedBorder": "#2dd4bf",
+      "focus": "rgba(94, 234, 212, 0.18)",
+      "disabledText": "#78909c",
+      "disabledBackground": "rgba(120, 144, 156, 0.08)"
+    },
+    "gradients": {
+      "brandHorizontal": "linear-gradient(270deg, #2dd4bf 0%, #43b2e1 100%)",
+      "brandVertical": "linear-gradient(0deg, #2dd4bf 0%, #43b2e1 100%)"
+    },
+    "scrollbar": "rgba(173, 193, 204, 0.35)",
+    "contrastThreshold": 4.5
+  }
+}

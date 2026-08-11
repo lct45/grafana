@@ -45,9 +45,9 @@ describe('changeTheme', () => {
   });
 
   describe('when the newPreferencesPage flag is off', () => {
-    it('persists via the legacy preferences API', async () => {
-      await changeTheme('light', false);
-      expect(backendSrv.patch).toHaveBeenCalledWith('/api/user/preferences', { theme: 'light' });
+    it('persists Harbor via the legacy preferences API', async () => {
+      await changeTheme('harbor', false);
+      expect(backendSrv.patch).toHaveBeenCalledWith('/api/user/preferences', { theme: 'harbor' });
       expect(preferencesAPI.endpoints.updatePreferences.initiate).not.toHaveBeenCalled();
     });
   });
@@ -57,11 +57,11 @@ describe('changeTheme', () => {
       setTestFlags({ [FlagKeys.GrafanaNewPreferencesPage]: true });
     });
 
-    it('persists to the user resource via the k8s preferences API', async () => {
-      await changeTheme('light', false);
+    it('persists Harbor to the user resource via the k8s preferences API', async () => {
+      await changeTheme('harbor', false);
       expect(preferencesAPI.endpoints.updatePreferences.initiate).toHaveBeenCalledWith({
         name: 'user-abc123',
-        patch: { spec: { theme: 'light' } },
+        patch: { spec: { theme: 'harbor' } },
       });
       expect(backendSrv.patch).not.toHaveBeenCalled();
     });

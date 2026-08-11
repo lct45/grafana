@@ -21,6 +21,7 @@ type ThemeDefinition struct {
 
 func main() {
 	themesPath := filepath.Join("..", "..", "..", "packages", "grafana-data", "src", "themes", "themeDefinitions")
+	builtInThemeIDs := map[string]struct{}{"harbor": {}}
 
 	// Check if the themes directory exists
 	if _, err := os.Stat(themesPath); os.IsNotExist(err) {
@@ -67,7 +68,8 @@ var themes = []ThemeDTO{
 			themeType = themeDef.Colors.Mode
 		}
 
-		output += fmt.Sprintf("\t{ID: %q, Type: %q, IsExtra: true},\n", themeId, themeType)
+		_, builtIn := builtInThemeIDs[themeId]
+		output += fmt.Sprintf("\t{ID: %q, Type: %q, IsExtra: %t},\n", themeId, themeType, !builtIn)
 
 		return nil
 	})
