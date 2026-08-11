@@ -73,6 +73,7 @@ func (oss *OSSMigrations) AddMigration(mg *Migrator) {
 	addQueryHistoryStarMigrations(mg)
 
 	addExploreBookmarkMigrations(mg)
+	addRecentItemMigrations(mg)
 
 	addCorrelationsMigrations(mg)
 
