@@ -19,7 +19,10 @@ import victorian from './themeDefinitions/victorian.json';
 import visual_refresh_dark from './themeDefinitions/visual_refresh_dark.json';
 import visual_refresh_light from './themeDefinitions/visual_refresh_light.json';
 import zen from './themeDefinitions/zen.json';
+import sandstone from './themeDefinitions/sandstone.json';
 import { type GrafanaTheme2 } from './types';
+
+const sandstoneTheme = NewThemeOptionsSchema.parse(sandstone);
 
 export interface ThemeRegistryItem extends RegistryItem {
   isExtra?: boolean;
@@ -85,6 +88,7 @@ const themeRegistry = new Registry<ThemeRegistryItem>(() => {
     { id: 'system', name: 'System preference', build: getSystemPreferenceTheme },
     { id: 'dark', name: 'Dark', build: () => createTheme({ colors: { mode: 'dark' } }) },
     { id: 'light', name: 'Light', build: () => createTheme({ colors: { mode: 'light' } }) },
+    { id: 'sandstone', name: 'Sandstone', build: () => createTheme(sandstoneTheme) },
   ];
 });
 
