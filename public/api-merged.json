@@ -5046,6 +5046,88 @@
         }
       }
     },
+    "/explore/bookmarks": {
+      "get": {
+        "tags": [
+          "explore_bookmarks"
+        ],
+        "summary": "List explore bookmarks for the signed-in user.",
+        "operationId": "listExploreBookmarks",
+        "responses": {
+          "200": {
+            "$ref": "#/responses/listExploreBookmarksResponse"
+          },
+          "401": {
+            "$ref": "#/responses/unauthorisedError"
+          },
+          "500": {
+            "$ref": "#/responses/internalServerError"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "explore_bookmarks"
+        ],
+        "summary": "Create an explore bookmark.",
+        "operationId": "createExploreBookmark",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateBookmarkCommand"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "$ref": "#/responses/createExploreBookmarkResponse"
+          },
+          "400": {
+            "$ref": "#/responses/badRequestError"
+          },
+          "401": {
+            "$ref": "#/responses/unauthorisedError"
+          },
+          "500": {
+            "$ref": "#/responses/internalServerError"
+          }
+        }
+      }
+    },
+    "/explore/bookmarks/{uid}": {
+      "delete": {
+        "tags": [
+          "explore_bookmarks"
+        ],
+        "summary": "Delete an explore bookmark.",
+        "operationId": "deleteExploreBookmark",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "uid",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/deleteExploreBookmarkResponse"
+          },
+          "401": {
+            "$ref": "#/responses/unauthorisedError"
+          },
+          "404": {
+            "$ref": "#/responses/notFoundError"
+          },
+          "500": {
+            "$ref": "#/responses/internalServerError"
+          }
+        }
+      }
+    },
     "/folders": {
       "get": {
         "description": "It returns all folders that the authenticated user has permission to view.\nIf nested folders are enabled, it expects an additional query parameter with the parent folder UID\nand returns the immediate subfolders that the authenticated user has permission to view.\nIf the parameter is not supplied then it returns immediate subfolders under the root\nthat the authenticated user has permission to view.\n\nUse: /apis/folder.grafana.app/v1/namespaces/{ns}/folders",
@@ -9906,6 +9988,142 @@
         }
       }
     },
+    "/user/RECENT_ITEMS": {
+      "get": {
+        "tags": [
+          "recent_items"
+        ],
+        "summary": "List recently viewed items for the signed-in user.",
+        "operationId": "listRecentItems",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "int64",
+            "name": "limit",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/listRecentItemsResponse"
+          },
+          "400": {
+            "$ref": "#/responses/badRequestError"
+          },
+          "401": {
+            "$ref": "#/responses/unauthorisedError"
+          },
+          "500": {
+            "$ref": "#/responses/internalServerError"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "recent_items"
+        ],
+        "summary": "Create or upsert a recently viewed item for the signed-in user.",
+        "operationId": "createRecentItem",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateRecentItemCommand"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/createRecentItemResponse"
+          },
+          "201": {
+            "$ref": "#/responses/createRecentItemResponse"
+          },
+          "400": {
+            "$ref": "#/responses/badRequestError"
+          },
+          "401": {
+            "$ref": "#/responses/unauthorisedError"
+          },
+          "500": {
+            "$ref": "#/responses/internalServerError"
+          }
+        }
+      }
+    },
+    "/user/RECENT_ITEMS/{uid}": {
+      "delete": {
+        "tags": [
+          "recent_items"
+        ],
+        "summary": "Delete a recently viewed item for the signed-in user.",
+        "operationId": "deleteRecentItem",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "uid",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/deleteRecentItemResponse"
+          },
+          "401": {
+            "$ref": "#/responses/unauthorisedError"
+          },
+          "404": {
+            "$ref": "#/responses/notFoundError"
+          },
+          "500": {
+            "$ref": "#/responses/internalServerError"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "recent_items"
+        ],
+        "summary": "Partially update a recently viewed item for the signed-in user.",
+        "operationId": "patchRecentItem",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "uid",
+            "in": "path",
+            "required": true
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PatchRecentItemCommand"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/createRecentItemResponse"
+          },
+          "400": {
+            "$ref": "#/responses/badRequestError"
+          },
+          "401": {
+            "$ref": "#/responses/unauthorisedError"
+          },
+          "404": {
+            "$ref": "#/responses/notFoundError"
+          },
+          "500": {
+            "$ref": "#/responses/internalServerError"
+          }
+        }
+      }
+    },
     "/user/auth-tokens": {
       "get": {
         "description": "Return a list of all auth tokens (devices) that the actual user currently have logged in from.",
@@ -14152,6 +14370,42 @@
         }
       }
     },
+    "CreateBookmarkCommand": {
+      "type": "object",
+      "title": "CreateBookmarkCommand is the command for creating an explore bookmark.",
+      "required": [
+        "name",
+        "datasourceUid",
+        "queries",
+        "timeRange"
+      ],
+      "properties": {
+        "datasourceUid": {
+          "description": "UID of the data source for which queries are stored.",
+          "type": "string",
+          "example": "PE1C5CBDA0504A6A3"
+        },
+        "name": {
+          "description": "Display name for the bookmark.",
+          "type": "string"
+        },
+        "queries": {
+          "$ref": "#/definitions/Json"
+        },
+        "timeRange": {
+          "$ref": "#/definitions/TimeRangeDTO"
+        }
+      }
+    },
+    "CreateBookmarkResponse": {
+      "type": "object",
+      "title": "CreateBookmarkResponse wraps a created bookmark.",
+      "properties": {
+        "bookmark": {
+          "$ref": "#/definitions/ExploreBookmarkDTO"
+        }
+      }
+    },
     "CreateCorrelationCommand": {
       "description": "CreateCorrelationCommand is the command for creating a correlation",
       "type": "object",
@@ -14386,6 +14640,44 @@
         },
         "queries": {
           "$ref": "#/definitions/Json"
+        }
+      }
+    },
+    "CreateRecentItemCommand": {
+      "type": "object",
+      "title": "CreateRecentItemCommand is the command for recording a recent item.",
+      "required": [
+        "resourceType",
+        "resourceUid",
+        "title",
+        "url"
+      ],
+      "properties": {
+        "resourceType": {
+          "description": "Type of the viewed resource.",
+          "type": "string",
+          "example": "dashboard"
+        },
+        "resourceUid": {
+          "description": "UID of the viewed resource.",
+          "type": "string"
+        },
+        "title": {
+          "description": "Display title for the resource.",
+          "type": "string"
+        },
+        "url": {
+          "description": "Deep link URL for the resource.",
+          "type": "string"
+        }
+      }
+    },
+    "CreateRecentItemResponse": {
+      "type": "object",
+      "title": "CreateRecentItemResponse wraps a created or upserted recent item.",
+      "properties": {
+        "item": {
+          "$ref": "#/definitions/RecentItemDTO"
         }
       }
     },
@@ -15029,12 +15321,30 @@
       "type": "string",
       "title": "DataTopic is used to identify which topic the frame should be assigned to."
     },
+    "DeleteBookmarkResponse": {
+      "type": "object",
+      "title": "DeleteBookmarkResponse is returned after deleting a bookmark.",
+      "properties": {
+        "message": {
+          "type": "string"
+        }
+      }
+    },
     "DeleteCorrelationResponseBody": {
       "type": "object",
       "properties": {
         "message": {
           "type": "string",
           "example": "Correlation deleted"
+        }
+      }
+    },
+    "DeleteRecentItemResponse": {
+      "type": "object",
+      "title": "DeleteRecentItemResponse is returned after deleting a recent item.",
+      "properties": {
+        "message": {
+          "type": "string"
         }
       }
     },
@@ -15368,6 +15678,31 @@
     },
     "EvalQueriesResponse": {
       "type": "object"
+    },
+    "ExploreBookmarkDTO": {
+      "type": "object",
+      "title": "ExploreBookmarkDTO is the API-facing bookmark representation.",
+      "properties": {
+        "createdAt": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "datasourceUid": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "queries": {
+          "$ref": "#/definitions/Json"
+        },
+        "timeRange": {
+          "$ref": "#/definitions/TimeRangeDTO"
+        },
+        "uid": {
+          "type": "string"
+        }
+      }
     },
     "ExplorePanelsState": {
       "description": "This is an object constructed with the keys as the values of the enum VisType and the value being a bag of properties"
@@ -17309,6 +17644,30 @@
         }
       }
     },
+    "ListBookmarksResponse": {
+      "type": "object",
+      "title": "ListBookmarksResponse wraps a list of bookmarks.",
+      "properties": {
+        "bookmarks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ExploreBookmarkDTO"
+          }
+        }
+      }
+    },
+    "ListRecentItemsResponse": {
+      "type": "object",
+      "title": "ListRecentItemsResponse wraps a list of recent items.",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RecentItemDTO"
+          }
+        }
+      }
+    },
     "MSTeamsConfig": {
       "type": "object",
       "properties": {
@@ -18306,6 +18665,22 @@
       "properties": {
         "comment": {
           "description": "Updated comment",
+          "type": "string"
+        }
+      }
+    },
+    "PatchRecentItemCommand": {
+      "type": "object",
+      "title": "PatchRecentItemCommand is the command for partially updating a recent item.",
+      "properties": {
+        "lastViewedAt": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "title": {
+          "type": "string"
+        },
+        "url": {
           "type": "string"
         }
       }
@@ -19802,6 +20177,35 @@
         },
         "name": {
           "description": "Name of the receiver.",
+          "type": "string"
+        }
+      }
+    },
+    "RecentItemDTO": {
+      "type": "object",
+      "title": "RecentItemDTO is the API-facing recent item representation.",
+      "properties": {
+        "createdAt": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "lastViewedAt": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "resourceType": {
+          "type": "string"
+        },
+        "resourceUid": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "uid": {
+          "type": "string"
+        },
+        "url": {
           "type": "string"
         }
       }
@@ -22059,6 +22463,18 @@
         }
       }
     },
+    "TimeRangeDTO": {
+      "type": "object",
+      "title": "TimeRangeDTO is the JSON time range stored with a bookmark.",
+      "properties": {
+        "from": {
+          "type": "string"
+        },
+        "to": {
+          "type": "string"
+        }
+      }
+    },
     "Token": {
       "type": "object",
       "properties": {
@@ -22242,11 +22658,52 @@
         }
       }
     },
-    "URL": { 
-			"type": "string", 
-			"format": "url" 
-		},
-		"Unstructured": {
+    "URL": {
+      "description": "The general form represented is:\n\n[scheme:][//[userinfo@]host][/]path[?query][#fragment]\n\nURLs that do not start with a slash after the scheme are interpreted as:\n\nscheme:opaque[?query][#fragment]\n\nThe Host field contains the host and port subcomponents of the URL.\nWhen the port is present, it is separated from the host with a colon.\nWhen the host is an IPv6 address, it must be enclosed in square brackets:\n\"[fe80::1]:80\". The [net.JoinHostPort] function combines a host and port\ninto a string suitable for the Host field, adding square brackets to\nthe host when necessary.\n\nNote that the Path field is stored in decoded form: /%47%6f%2f becomes /Go/.\nA consequence is that it is impossible to tell which slashes in the Path were\nslashes in the raw URL and which were %2f. This distinction is rarely important,\nbut when it is, the code should use the [URL.EscapedPath] method, which preserves\nthe original encoding of Path. The Fragment field is also stored in decoded form,\nuse [URL.EscapedFragment] to retrieve the original encoding.\n\nThe [URL.String] method uses the [URL.EscapedPath] method to obtain the path.",
+      "type": "object",
+      "title": "A URL represents a parsed URL (technically, a URI reference).",
+      "properties": {
+        "ForceQuery": {
+          "description": "ForceQuery indicates whether the original URL contained a query ('?') character.\nWhen set, the String method will include a trailing '?', even when RawQuery is empty.",
+          "type": "boolean"
+        },
+        "Fragment": {
+          "type": "string"
+        },
+        "Host": {
+          "type": "string"
+        },
+        "OmitHost": {
+          "description": "OmitHost indicates the URL has an empty host (authority).\nWhen set, the String method will not include the host when it is empty.",
+          "type": "boolean"
+        },
+        "Opaque": {
+          "type": "string"
+        },
+        "Path": {
+          "type": "string"
+        },
+        "RawFragment": {
+          "description": "RawFragment is an optional field containing an encoded fragment hint.\nSee the EscapedFragment method for more details.\n\nIn general, code should call EscapedFragment instead of reading RawFragment.",
+          "type": "string"
+        },
+        "RawPath": {
+          "description": "RawPath is an optional field containing an encoded path hint.\nSee the EscapedPath method for more details.\n\nIn general, code should call EscapedPath instead of reading RawPath.",
+          "type": "string"
+        },
+        "RawQuery": {
+          "description": "RawQuery contains the encoded query values, without the initial '?'.\nUse URL.Query to decode the query.",
+          "type": "string"
+        },
+        "Scheme": {
+          "type": "string"
+        },
+        "User": {
+          "$ref": "#/definitions/Userinfo"
+        }
+      }
+    },
+    "Unstructured": {
       "description": "Unstructured allows objects that do not have Golang structs registered to be manipulated\ngenerically.",
       "type": "object",
       "properties": {
@@ -23972,6 +24429,12 @@
         }
       }
     },
+    "createExploreBookmarkResponse": {
+      "description": "(empty)",
+      "schema": {
+        "$ref": "#/definitions/CreateBookmarkResponse"
+      }
+    },
     "createOrUpdateDatasourceResponse": {
       "description": "(empty)",
       "schema": {
@@ -24038,6 +24501,12 @@
       "description": "(empty)",
       "schema": {
         "$ref": "#/definitions/PublicDashboard"
+      }
+    },
+    "createRecentItemResponse": {
+      "description": "(empty)",
+      "schema": {
+        "$ref": "#/definitions/CreateRecentItemResponse"
       }
     },
     "createReportResponse": {
@@ -24172,6 +24641,12 @@
         }
       }
     },
+    "deleteExploreBookmarkResponse": {
+      "description": "(empty)",
+      "schema": {
+        "$ref": "#/definitions/DeleteBookmarkResponse"
+      }
+    },
     "deleteFolderResponse": {
       "description": "(empty)",
       "schema": {
@@ -24199,6 +24674,12 @@
             "example": "My Folder"
           }
         }
+      }
+    },
+    "deleteRecentItemResponse": {
+      "description": "(empty)",
+      "schema": {
+        "$ref": "#/definitions/DeleteRecentItemResponse"
       }
     },
     "devicesResponse": {
@@ -24757,10 +25238,22 @@
         }
       }
     },
+    "listExploreBookmarksResponse": {
+      "description": "(empty)",
+      "schema": {
+        "$ref": "#/definitions/ListBookmarksResponse"
+      }
+    },
     "listPublicDashboardsResponse": {
       "description": "(empty)",
       "schema": {
         "$ref": "#/definitions/PublicDashboardListResponseWithPagination"
+      }
+    },
+    "listRecentItemsResponse": {
+      "description": "(empty)",
+      "schema": {
+        "$ref": "#/definitions/ListRecentItemsResponse"
       }
     },
     "listRecordingRulesResponse": {
