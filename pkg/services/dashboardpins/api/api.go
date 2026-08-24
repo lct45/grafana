@@ -119,7 +119,7 @@ func (a *API) PatchDashboardPin(c *contextmodel.ReqContext) response.Response {
 // Unpin a dashboard for the signed-in user.
 //
 // Responses:
-// 200: okResponse
+// 204: noContentResponse
 // 401: unauthorisedError
 // 404: notFoundError
 // 500: internalServerError
@@ -131,7 +131,7 @@ func (a *API) DeleteDashboardPin(c *contextmodel.ReqContext) response.Response {
 		return mapDashboardPinError(err, "Failed to delete dashboard pin")
 	}
 
-	return response.Success("Dashboard pin deleted")
+	return response.Empty(http.StatusNoContent)
 }
 
 func bindPatchDashboardPinCommand(req *http.Request, cmd *dashboardpins.PatchDashboardPinCommand) error {

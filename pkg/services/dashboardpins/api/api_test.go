@@ -234,7 +234,7 @@ func TestDeleteDashboardPinHandler(t *testing.T) {
 
 		sc.ctx.Req = web.SetURLParams(sc.ctx.Req, map[string]string{":dashboardUid": testDashUID})
 		resp := sc.api.DeleteDashboardPin(sc.reqContext)
-		require.Equal(t, http.StatusOK, resp.Status())
+		require.Equal(t, http.StatusNoContent, resp.Status())
 
 		listResp := sc.api.ListDashboardPins(sc.reqContext)
 		var result dashboardpins.ListDashboardPinsResponse
