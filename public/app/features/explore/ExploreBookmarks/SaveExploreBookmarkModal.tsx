@@ -26,6 +26,12 @@ export function SaveExploreBookmarkModal({ isOpen, isSaving, canSave, onClose, o
   const styles = useStyles2(getStyles);
   const [name, setName] = useState('');
 
+  // Modal stays mounted while the drawer is open; clear draft on dismiss so reopen is empty.
+  const handleClose = () => {
+    setName('');
+    onClose();
+  };
+
   const handleSave = async () => {
     const trimmedName = name.trim();
     if (!trimmedName || !canSave || isSaving) {
@@ -40,7 +46,7 @@ export function SaveExploreBookmarkModal({ isOpen, isSaving, canSave, onClose, o
     <Modal
       title={t('explore.bookmarks.save-modal-title', 'Save bookmark')}
       isOpen={isOpen}
-      onDismiss={onClose}
+      onDismiss={handleClose}
       closeOnBackdropClick
     >
       <Field label={t('explore.bookmarks.name-label', 'Bookmark name')}>
@@ -56,7 +62,7 @@ export function SaveExploreBookmarkModal({ isOpen, isSaving, canSave, onClose, o
         />
       </Field>
       <div className={styles.actions}>
-        <Button variant="secondary" fill="outline" onClick={onClose}>
+        <Button variant="secondary" fill="outline" onClick={handleClose}>
           <Trans i18nKey="explore.bookmarks.cancel">Cancel</Trans>
         </Button>
         <Button onClick={handleSave} disabled={!canSave || !name.trim() || isSaving}>
