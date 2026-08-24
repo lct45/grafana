@@ -25,6 +25,7 @@ import { SaveDashboardDrawer } from 'app/features/dashboard/components/SaveDashb
 import { type DashboardModel } from 'app/features/dashboard/state/DashboardModel';
 import { PublicDashboardBadgeLegacy } from 'app/features/dashboard-scene/scene/new-toolbar/actions/PublicDashboardBadge';
 import { DashboardInteractions } from 'app/features/dashboard-scene/utils/interactions';
+import { PinToolbarButton } from 'app/features/home/PinnedDashboards/PinToolbarButton';
 import { playlistSrv } from 'app/features/playlist/PlaylistSrv';
 import { updateTimeZoneForSession } from 'app/features/profile/state/reducers';
 import { StarToolbarButton } from 'app/features/stars/StarToolbarButton';
@@ -166,6 +167,7 @@ const DashNav = memo<Props>((props) => {
           id={dashboard.uid}
         />
       );
+      buttons.push(<PinToolbarButton key="button-pin" dashboardUid={dashboard.uid} title={dashboard.title} />);
     }
 
     if (dashboard.uid) {

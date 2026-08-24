@@ -8270,6 +8270,25 @@
     "basic-extensions": {
       "aria-label-add": "Add"
     },
+    "bookmarks": {
+      "button": "Bookmarks",
+      "button-aria-label": "Query bookmarks",
+      "cancel": "Cancel",
+      "close": "Close bookmarks",
+      "delete-confirm": "Delete",
+      "delete-confirmation": "Are you sure you want to delete \"{{name}}\"?",
+      "delete-title": "Delete bookmark",
+      "delete-tooltip": "Delete bookmark",
+      "drawer-title": "Query bookmarks",
+      "empty": "No bookmarks yet. Save your current query to get started.",
+      "name-label": "Bookmark name",
+      "name-placeholder": "e.g. CPU usage last 6 hours",
+      "open": "Open",
+      "retry": "Retry",
+      "save": "Save",
+      "save-current": "Save current query",
+      "save-modal-title": "Save bookmark"
+    },
     "build-dashboard-panel-from-explore-state": {
       "title": {
         "new-panel": "New Panel"
@@ -10720,6 +10739,31 @@
       "empty-description": "Once your organization has dashboards and usage data has been collected, dashboards with the most views over the last 30 days will be displayed here.",
       "error-title": "Could not load most used dashboards",
       "loading": "Loading most used dashboards..."
+    },
+    "pinned-dashboards": {
+      "add-note": "Add note",
+      "empty": "Pin dashboards from the toolbar to keep them here.",
+      "empty-description": "Open any dashboard and use the pin button next to the star to add it to this list.",
+      "hydrate-error": "Failed to load dashboards",
+      "list-label": "Pinned dashboards",
+      "load-error": "Failed to load pins",
+      "loading": "Loading pinned dashboards...",
+      "move-down": "Move down",
+      "move-down-for": "Move {{title}} down",
+      "move-up": "Move up",
+      "move-up-for": "Move {{title}} up",
+      "note-input": "Pin note for {{title}}",
+      "note-placeholder": "Add a note",
+      "pin-success": "Dashboard pinned to Home",
+      "retry": "Try again",
+      "title": "Pinned",
+      "toolbar-pin": "Pin to Home",
+      "toolbar-pin-with-title": "Pin \"{{title}}\" to Home",
+      "toolbar-unpin": "Unpin from Home",
+      "toolbar-unpin-with-title": "Unpin \"{{title}}\" from Home",
+      "unpin": "Unpin from Home",
+      "unpin-for": "Unpin {{title}} from Home",
+      "unpin-success": "Dashboard unpinned from Home"
     },
     "recent-dashboards-tab": {
       "browse": "Browse dashboards",

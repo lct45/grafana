@@ -17,6 +17,7 @@ import { DashboardTabs } from './DashboardTabs/DashboardTabs';
 import { type HomepageTabExtensionProps } from './DashboardTabs/types';
 import { HomePageSkeleton } from './HomePageSkeleton';
 import { HomeSection } from './HomeSection';
+import { PinnedDashboardsSection } from './PinnedDashboards/PinnedDashboardsSection';
 import Recommendations from './Recommendations/Recommendations';
 import useHomeGreeting from './useHomeGreeting';
 
@@ -83,6 +84,10 @@ export default function HomePage() {
         ) : (
           <Suspense fallback={skeleton}>
             <Stack direction="column" gap={2}>
+              <HomeSection direction="column" display="flex" gap={2}>
+                <PinnedDashboardsSection />
+              </HomeSection>
+
               <HomeSection direction="column" display="flex" gap={2}>
                 {/* Assistant injects an Assistant-based prompt input when available */}
                 {renderLimitedComponents({
