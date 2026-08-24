@@ -14,7 +14,9 @@ import { useDashboardPins } from './useDashboardPins';
 export function PinnedDashboardsSection() {
   const styles = useStyles2(getSectionStyles);
   const { pins, isLoading, error, refreshPins, reorderPins, unpinDashboard, updatePinNote } = useDashboardPins();
-  const [dashboardsByUid, setDashboardsByUid] = useState<Record<string, DashboardQueryResult>>({});
+  const [dashboardsByUid, setDashboardsByUid] = useState<
+    Record<string, Pick<DashboardQueryResult, 'name' | 'url'>>
+  >({});
   const [hydrating, setHydrating] = useState(false);
   const [hydrateError, setHydrateError] = useState<string | null>(null);
   const [draggedUid, setDraggedUid] = useState<string | null>(null);
@@ -40,10 +42,10 @@ export function PinnedDashboardsSection() {
           return;
         }
 
-        const next: Record<string, DashboardQueryResult> = {};
+        const next: Record<string, Pick<DashboardQueryResult, 'name' | 'url'>> = {};
         for (let i = 0; i < response.view.length; i++) {
           const row = response.view.get(i);
-          next[row.uid] = row;
+          next[row.uid] = { name: row.name, url: row.url };
         }
         setDashboardsByUid(next);
       })

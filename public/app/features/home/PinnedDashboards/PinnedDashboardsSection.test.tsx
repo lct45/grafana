@@ -90,6 +90,29 @@ describe('PinnedDashboardsSection', () => {
     });
   });
 
+  it('copies search rows that reuse a mutable view object', async () => {
+    const row = { uid: '', name: '', url: '' };
+    searchMock.mockResolvedValue({
+      view: {
+        length: 2,
+        get: (index: number) => {
+          Object.assign(
+            row,
+            index === 0
+              ? { uid: 'dash-1', name: 'Production Overview', url: '/d/dash-1/production-overview' }
+              : { uid: 'dash-2', name: 'On-call Board', url: '/d/dash-2/on-call-board' }
+          );
+          return row;
+        },
+      },
+    });
+
+    renderSection();
+
+    expect(await screen.findByText('Production Overview')).toBeInTheDocument();
+    expect(screen.getByText('On-call Board')).toBeInTheDocument();
+  });
+
   it('moves a pin down with keyboard controls', async () => {
     const user = userEvent.setup();
     renderSection();
