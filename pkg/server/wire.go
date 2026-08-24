@@ -94,6 +94,8 @@ import (
 	"github.com/grafana/grafana/pkg/services/correlations"
 	"github.com/grafana/grafana/pkg/services/dashboardimport"
 	dashboardimportservice "github.com/grafana/grafana/pkg/services/dashboardimport/service"
+	"github.com/grafana/grafana/pkg/services/dashboardpins"
+	dashboardpinsapi "github.com/grafana/grafana/pkg/services/dashboardpins/api"
 	"github.com/grafana/grafana/pkg/services/dashboards"
 	dashboardservice "github.com/grafana/grafana/pkg/services/dashboards/service"
 	dashboardclient "github.com/grafana/grafana/pkg/services/dashboards/service/client"
@@ -278,6 +280,9 @@ var wireBasicSet = wire.NewSet(
 	wire.Bind(new(queryhistory.Service), new(*queryhistory.QueryHistoryService)),
 	explorebookmarks.ProvideService,
 	wire.Bind(new(explorebookmarks.Service), new(*explorebookmarks.ExploreBookmarksService)),
+	dashboardpins.ProvideService,
+	wire.Bind(new(dashboardpins.Service), new(*dashboardpins.DashboardPinsService)),
+	dashboardpinsapi.ProvideApi,
 	correlations.ProvideService,
 	wire.Bind(new(correlations.Service), new(*correlations.CorrelationsService)),
 	quotaimpl.ProvideService,

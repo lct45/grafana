@@ -20,6 +20,7 @@ import { type RouteDescriptor } from './core/navigation/types';
 import { contextSrv } from './core/services/context_srv';
 import { ThemeProvider } from './core/utils/ConfigProvider';
 import { getCommandPaletteInputMode } from './features/commandPalette/inputMode';
+import { DashboardPinsProvider } from './features/home/PinnedDashboards/useDashboardPins';
 import { LiveConnectionWarning } from './features/live/LiveConnectionWarning';
 import { ExtensionRegistriesProvider } from './features/plugins/extensions/ExtensionRegistriesContext';
 import { getPluginExtensionRegistries } from './features/plugins/extensions/registry/setup';
@@ -137,14 +138,16 @@ export function AppWrapper({ context }: AppWrapperProps) {
                       <ExtensionRegistriesProvider registries={registries}>
                         <ExtensionsSidebarProvider>
                           <FeatureControlContextProvider>
-                            <UNSAFE_PortalProvider getContainer={getPortalContainer}>
-                              <GlobalStyles />
-                              <div className="grafana-app">
-                                <RouterWrapper {...routerWrapperProps} />
-                                <LiveConnectionWarning />
-                                <PortalContainer />
-                              </div>
-                            </UNSAFE_PortalProvider>
+                            <DashboardPinsProvider>
+                              <UNSAFE_PortalProvider getContainer={getPortalContainer}>
+                                <GlobalStyles />
+                                <div className="grafana-app">
+                                  <RouterWrapper {...routerWrapperProps} />
+                                  <LiveConnectionWarning />
+                                  <PortalContainer />
+                                </div>
+                              </UNSAFE_PortalProvider>
+                            </DashboardPinsProvider>
                           </FeatureControlContextProvider>
                         </ExtensionsSidebarProvider>
                       </ExtensionRegistriesProvider>

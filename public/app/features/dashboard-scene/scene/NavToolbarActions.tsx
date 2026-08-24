@@ -12,6 +12,7 @@ import { LS_PANEL_COPY_KEY } from 'app/core/constants';
 import { contextSrv } from 'app/core/services/context_srv';
 import { getDashboardSrv } from 'app/features/dashboard/services/DashboardSrv';
 import { trackDashboardSceneEditButtonClicked } from 'app/features/dashboard-scene/utils/tracking';
+import { PinToolbarButton } from 'app/features/home/PinnedDashboards/PinToolbarButton';
 import { playlistSrv } from 'app/features/playlist/PlaylistSrv';
 import { ReadOnlyBadge } from 'app/features/provisioning/components/ReadOnlyBadge';
 import { useGetResourceRepositoryView } from 'app/features/provisioning/hooks/useGetResourceRepositoryView';
@@ -114,6 +115,17 @@ export function ToolbarActions({ dashboard }: Props) {
           id={uid}
         />
       );
+    },
+  });
+
+  toolbarActions.push({
+    group: 'icon-actions',
+    condition: uid && Boolean(canStar) && isShowingDashboard && !isEditing,
+    render: () => {
+      if (!uid) {
+        return null;
+      }
+      return <PinToolbarButton key="pin-dashboard-button" dashboardUid={uid} title={title} />;
     },
   });
 

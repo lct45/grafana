@@ -31,6 +31,7 @@ import {
 import { ViewModePanelPromptCard } from '../assistant/ViewModePanelPromptCard';
 import { type DashboardScene } from '../scene/DashboardScene';
 import { NavToolbarActions } from '../scene/NavToolbarActions';
+import { PinButton } from '../scene/new-toolbar/actions/PinButton';
 import { PublicDashboardBadge } from '../scene/new-toolbar/actions/PublicDashboardBadge';
 import { StarButton } from '../scene/new-toolbar/actions/StarButton';
 import { dynamicDashNavActions } from '../utils/registerDynamicDashNavAction';
@@ -272,6 +273,7 @@ function useUpdateAppChromeActions(dashboard: DashboardScene) {
     const breadcrumbActions = (
       <>
         {hasUid && canStar && <StarButton dashboard={dashboard} />}
+        {hasUid && canStar && <PinButton dashboard={dashboard} />}
         {hasUid && canStar && <PublicDashboardBadge dashboard={dashboard} />}
         {renderDynamicNavActions()}
       </>
