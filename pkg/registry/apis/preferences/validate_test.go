@@ -57,6 +57,12 @@ func TestAPIBuilder_Validate(t *testing.T) {
 			resource: prefsGVR,
 		},
 		{
+			name:     "valid create with Sandstone theme",
+			obj:      newPrefs(preferences.PreferencesSpec{Theme: new("sandstone")}),
+			op:       admission.Create,
+			resource: prefsGVR,
+		},
+		{
 			name:     "valid create with extra theme",
 			obj:      newPrefs(preferences.PreferencesSpec{Theme: new("aubergine")}),
 			op:       admission.Create,
