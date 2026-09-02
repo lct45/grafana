@@ -98,6 +98,7 @@ import (
 	"github.com/grafana/grafana/pkg/services/query"
 	"github.com/grafana/grafana/pkg/services/queryhistory"
 	"github.com/grafana/grafana/pkg/services/quota"
+	"github.com/grafana/grafana/pkg/services/recentitems"
 	"github.com/grafana/grafana/pkg/services/rendering"
 	"github.com/grafana/grafana/pkg/services/search"
 	"github.com/grafana/grafana/pkg/services/searchusers"
@@ -160,6 +161,7 @@ type HTTPServer struct {
 	ShortURLService              shorturls.Service
 	QueryHistoryService          queryhistory.Service
 	ExploreBookmarksService      explorebookmarks.Service
+	RecentItemsService           recentitems.Service
 	CorrelationsService          correlations.Service
 	Live                         *live.GrafanaLive
 	LivePushGateway              *pushhttp.Gateway
@@ -252,7 +254,7 @@ func ProvideHTTPServer(opts ServerOptions, cfg *setting.Cfg, routeRegister routi
 	pluginErrorResolver plugins.ErrorResolver, pluginInstaller plugins.Installer, settingsProvider setting.Provider,
 	dataSourceCache datasources.CacheService, userTokenService auth.UserTokenService,
 	cleanUpService *cleanup.CleanUpService, shortURLService shorturls.Service, queryHistoryService queryhistory.Service,
-	exploreBookmarksService explorebookmarks.Service, correlationsService correlations.Service, remoteCache *remotecache.RemoteCache, provisioningService provisioning.ProvisioningService,
+	exploreBookmarksService explorebookmarks.Service, recentItemsService recentitems.Service, correlationsService correlations.Service, remoteCache *remotecache.RemoteCache, provisioningService provisioning.ProvisioningService,
 	accessControl accesscontrol.AccessControl, dataSourceProxy *datasourceproxy.DataSourceProxyService, searchService *search.SearchService,
 	live *live.GrafanaLive, livePushGateway *pushhttp.Gateway, plugCtxProvider *plugincontext.Provider,
 	contextHandler *contexthandler.ContextHandler, loggerMiddleware loggermw.Logger, features featuremgmt.FeatureToggles,
@@ -317,6 +319,7 @@ func ProvideHTTPServer(opts ServerOptions, cfg *setting.Cfg, routeRegister routi
 		ShortURLService:              shortURLService,
 		QueryHistoryService:          queryHistoryService,
 		ExploreBookmarksService:      exploreBookmarksService,
+		RecentItemsService:           recentItemsService,
 		CorrelationsService:          correlationsService,
 		Features:                     features, // a read only view of the managers state
 		RemoteCacheService:           remoteCache,
