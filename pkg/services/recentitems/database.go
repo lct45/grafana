@@ -36,14 +36,7 @@ func (s *RecentItemsService) upsert(ctx context.Context, signedInUser *user.Sign
 		}
 
 		now := s.now().Unix()
-		if found {
-			item.Title = strings.TrimSpace(cmd.Title)
-			item.URL = cmd.URL
-			item.LastViewedAt = now
-			if _, err := session.ID(item.ID).Cols("title", "url", "last_viewed_at").Update(&item); err != nil {
-				return err
-			}
-		} else {
+		if !found {
 			item = RecentItem{
 				UID:          util.GenerateShortUID(),
 				OrgID:        signedInUser.OrgID,
@@ -55,9 +48,31 @@ func (s *RecentItemsService) upsert(ctx context.Context, signedInUser *user.Sign
 				LastViewedAt: now,
 			}
 			if _, err := session.Insert(&item); err != nil {
+				if !s.store.GetDialect().IsUniqueConstraintViolation(err) {
+					return err
+				}
+				found, getErr := session.Where(
+					"org_id = ? AND user_id = ? AND resource_type = ? AND resource_uid = ?",
+					signedInUser.OrgID, signedInUser.UserID, cmd.ResourceType, cmd.ResourceUID,
+				).Get(&item)
+				if getErr != nil {
+					return getErr
+				}
+				if !found {
+					return err
+				}
+			} else {
+				created = true
+			}
+		}
+
+		if !created {
+			item.Title = strings.TrimSpace(cmd.Title)
+			item.URL = cmd.URL
+			item.LastViewedAt = now
+			if _, err := session.ID(item.ID).Cols("title", "url", "last_viewed_at").Update(&item); err != nil {
 				return err
 			}
-			created = true
 		}
 
 		return trimRecentItems(session, signedInUser)
@@ -160,15 +175,16 @@ func trimRecentItems(session *db.Session, signedInUser *user.SignedInUser) error
 	var items []RecentItem
 	if err := session.Where("org_id = ? AND user_id = ?", signedInUser.OrgID, signedInUser.UserID).
 		Desc("last_viewed_at", "id").
+		Limit(MaxLimit, MaxLimit).
 		Find(&items); err != nil {
 		return err
 	}
-	if len(items) <= MaxLimit {
+	if len(items) == 0 {
 		return nil
 	}
 
-	ids := make([]int64, 0, len(items)-MaxLimit)
-	for _, item := range items[MaxLimit:] {
+	ids := make([]int64, 0, len(items))
+	for _, item := range items {
 		ids = append(ids, item.ID)
 	}
 	_, err := session.In("id", ids).Delete(&RecentItem{})
@@ -233,7 +249,7 @@ func validateTitle(title string) error {
 }
 
 func validateURL(rawURL string) error {
-	if rawURL == "" || len(rawURL) > 1024 || !strings.HasPrefix(rawURL, "/") {
+	if rawURL == "" || len(rawURL) > 1024 || !strings.HasPrefix(rawURL, "/") || strings.HasPrefix(rawURL, "//") || strings.Contains(rawURL, "\\") {
 		return ErrInvalidURL
 	}
 	parsed, err := url.Parse(rawURL)

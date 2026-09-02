@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"sync"
 	"testing"
 	"time"
 
@@ -103,6 +104,37 @@ func TestRecentItemsOrderingLimitAndTrim(t *testing.T) {
 	require.Equal(t, "dashboard-1", allItems[MaxLimit-1].ResourceUID)
 }
 
+func TestRecentItemsConcurrentUpsert(t *testing.T) {
+	service, signedInUser := newTestService(t)
+	cmd := createCommand("dashboard", "dashboard-1")
+
+	const workers = 8
+	errs := make([]error, workers)
+	uids := make([]string, workers)
+	var wg sync.WaitGroup
+	wg.Add(workers)
+	for i := 0; i < workers; i++ {
+		go func(i int) {
+			defer wg.Done()
+			item, _, err := service.Upsert(t.Context(), signedInUser, cmd)
+			errs[i] = err
+			uids[i] = item.UID
+		}(i)
+	}
+	wg.Wait()
+
+	for _, err := range errs {
+		require.NoError(t, err)
+	}
+
+	items, err := service.List(t.Context(), signedInUser, DefaultLimit)
+	require.NoError(t, err)
+	require.Len(t, items, 1)
+	for _, uid := range uids {
+		require.Equal(t, items[0].UID, uid)
+	}
+}
+
 func TestRecentItemsValidation(t *testing.T) {
 	service, signedInUser := newTestService(t)
 
@@ -118,6 +150,8 @@ func TestRecentItemsValidation(t *testing.T) {
 		{name: "long title", cmd: CreateRecentItemCommand{ResourceType: "dashboard", ResourceUID: "uid", Title: strings.Repeat("a", 256), URL: "/d/uid"}, err: ErrInvalidTitle},
 		{name: "absolute URL", cmd: CreateRecentItemCommand{ResourceType: "dashboard", ResourceUID: "uid", Title: "Title", URL: "https://example.com"}, err: ErrInvalidURL},
 		{name: "protocol-relative URL", cmd: CreateRecentItemCommand{ResourceType: "dashboard", ResourceUID: "uid", Title: "Title", URL: "//example.com/path"}, err: ErrInvalidURL},
+		{name: "triple-slash URL", cmd: CreateRecentItemCommand{ResourceType: "dashboard", ResourceUID: "uid", Title: "Title", URL: "///evil.com"}, err: ErrInvalidURL},
+		{name: "backslash protocol-relative URL", cmd: CreateRecentItemCommand{ResourceType: "dashboard", ResourceUID: "uid", Title: "Title", URL: "/\\evil.com"}, err: ErrInvalidURL},
 	}
 
 	for _, tt := range tests {
