@@ -32,4 +32,16 @@ describe('ThemeCard', () => {
     // Check that onSelect was called only once
     expect(onSelectMock).toHaveBeenCalledTimes(1);
   });
+
+  it('renders the Sandstone theme label', () => {
+    const sandstoneTheme: ThemeRegistryItem = {
+      id: 'sandstone',
+      name: 'Sandstone',
+      build: () => createTheme({ colors: { mode: 'light' } }),
+    };
+
+    render(<ThemeCard themeOption={sandstoneTheme} onSelect={jest.fn()} isSelected={false} />);
+
+    expect(screen.getByRole('radio', { name: 'Sandstone' })).toBeInTheDocument();
+  });
 });
