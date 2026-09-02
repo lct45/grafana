@@ -1,0 +1,82 @@
+{
+  "name": "Sandstone",
+  "id": "sandstone",
+  "colors": {
+    "mode": "light",
+    "border": {
+      "weak": "rgba(61, 52, 41, 0.12)",
+      "medium": "rgba(61, 52, 41, 0.20)",
+      "strong": "rgba(61, 52, 41, 0.30)"
+    },
+    "text": {
+      "primary": "#3D3429",
+      "secondary": "#5C5248",
+      "disabled": "rgba(61, 52, 41, 0.5)",
+      "link": "#B85C38",
+      "maxContrast": "#2A231C"
+    },
+    "primary": {
+      "main": "#C0673E",
+      "text": "#C0673E",
+      "border": "#A85532",
+      "name": "primary",
+      "shade": "#A85532",
+      "transparent": "#C0673E26",
+      "contrastText": "#FFFFFF",
+      "borderTransparent": "#C0673E40"
+    },
+    "secondary": {
+      "main": "#FFFFFF",
+      "text": "#5C5248",
+      "border": "#D9CEC0",
+      "name": "secondary",
+      "shade": "#D9CEC0",
+      "transparent": "#FFFFFF26",
+      "contrastText": "#3D3429",
+      "borderTransparent": "#FFFFFF40"
+    },
+    "accent": {
+      "main": "#C0673E",
+      "text": "#C0673E",
+      "border": "#A85532",
+      "name": "accent",
+      "shade": "#A85532",
+      "transparent": "#C0673E26",
+      "contrastText": "#FFFFFF",
+      "borderTransparent": "#C0673E40"
+    },
+    "info": {
+      "main": "#4A7C9B"
+    },
+    "success": {
+      "main": "#5A8F5E"
+    },
+    "warning": {
+      "main": "#D4A017"
+    },
+    "background": {
+      "canvas": "#F0E8DC",
+      "page": "#F7F2EA",
+      "primary": "#FFFCF8",
+      "secondary": "#EDE4D6",
+      "elevated": "#FFFCF8"
+    },
+    "action": {
+      "hover": "rgba(192, 103, 62, 0.10)",
+      "selected": "rgba(192, 103, 62, 0.18)",
+      "selectedBorder": "#C0673E",
+      "focus": "rgba(192, 103, 62, 0.24)",
+      "hoverOpacity": 0.08,
+      "disabledText": "rgba(92, 82, 72, 0.5)",
+      "disabledBackground": "rgba(92, 82, 72, 0.06)",
+      "disabledOpacity": 0.38
+    },
+    "gradients": {
+      "brandHorizontal": "linear-gradient(270deg, #C0673E 0%, #D4845A 100%)",
+      "brandVertical": "linear-gradient(0deg, #C0673E 0%, #D4845A 100%)"
+    },
+    "contrastThreshold": 3,
+    "hoverFactor": 0.03,
+    "tonalOffset": 0.15
+  }
+}
