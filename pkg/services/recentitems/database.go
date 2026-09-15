@@ -28,7 +28,8 @@ func (s *RecentItemsService) upsert(ctx context.Context, signedInUser *user.Sign
 	if err == nil {
 		return toDTO(item), created, nil
 	}
-	if !s.store.GetDialect().IsUniqueConstraintViolation(err) {
+	dialect := s.store.GetDialect()
+	if dialect == nil || !dialect.IsUniqueConstraintViolation(err) {
 		return RecentItemDTO{}, false, err
 	}
 

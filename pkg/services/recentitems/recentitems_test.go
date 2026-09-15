@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"net/http"
 	"reflect"
-	"runtime"
 	"strings"
 	"sync"
 	"testing"
@@ -17,6 +16,8 @@ import (
 
 	"github.com/grafana/grafana/pkg/api/routing"
 	"github.com/grafana/grafana/pkg/infra/db"
+	"github.com/grafana/grafana/pkg/infra/db/dbtest"
+	"github.com/grafana/grafana/pkg/middleware"
 	contextmodel "github.com/grafana/grafana/pkg/services/contexthandler/model"
 	"github.com/grafana/grafana/pkg/services/user"
 	"github.com/grafana/grafana/pkg/tests/testsuite"
@@ -46,8 +47,7 @@ func TestProvideServiceRegistersAuthenticatedRoutes(t *testing.T) {
 	for _, route := range router.routes {
 		require.Equal(t, expectedRoutes[route.method], route.pattern)
 		require.Len(t, route.handlers, 2)
-		middlewareName := runtime.FuncForPC(reflect.ValueOf(route.handlers[0]).Pointer()).Name()
-		require.Contains(t, middlewareName, "ReqSignedInNoAnonymous")
+		require.Equal(t, reflect.ValueOf(middleware.ReqSignedInNoAnonymous).Pointer(), reflect.ValueOf(route.handlers[0]).Pointer())
 	}
 }
 
@@ -171,6 +171,27 @@ func TestRecentItemsConcurrentUpsert(t *testing.T) {
 	}
 }
 
+func TestRecentItemsConflictRecovery(t *testing.T) {
+	service, signedInUser := newTestService(t)
+	original, _, err := service.Upsert(t.Context(), signedInUser, createCommand("dashboard", "dashboard-1"))
+	require.NoError(t, err)
+
+	service.now = func() time.Time { return time.Unix(500, 0) }
+	updated, err := service.updateExistingInTransaction(t.Context(), signedInUser, CreateRecentItemCommand{
+		ResourceType: "dashboard",
+		ResourceUID:  "dashboard-1",
+		Title:        "Recovered concurrent view",
+		URL:          "/d/dashboard-1/recovered",
+	})
+	require.NoError(t, err)
+	require.Equal(t, original.UID, updated.UID)
+	require.Equal(t, "Recovered concurrent view", updated.Title)
+	require.Equal(t, int64(500), updated.LastViewedAt)
+
+	_, err = service.updateExistingInTransaction(t.Context(), signedInUser, createCommand("dashboard", "missing"))
+	require.ErrorIs(t, err, ErrItemNotFound)
+}
+
 func TestRecentItemsValidation(t *testing.T) {
 	service, signedInUser := newTestService(t)
 	tests := []struct {
@@ -189,6 +210,7 @@ func TestRecentItemsValidation(t *testing.T) {
 		{name: "protocol-relative URL", cmd: CreateRecentItemCommand{ResourceType: "dashboard", ResourceUID: "uid", Title: "Title", URL: "//example.com/path"}, err: ErrInvalidURL},
 		{name: "triple-slash URL", cmd: CreateRecentItemCommand{ResourceType: "dashboard", ResourceUID: "uid", Title: "Title", URL: "///evil.com"}, err: ErrInvalidURL},
 		{name: "backslash URL", cmd: CreateRecentItemCommand{ResourceType: "dashboard", ResourceUID: "uid", Title: "Title", URL: "/\\evil.com"}, err: ErrInvalidURL},
+		{name: "malformed URL", cmd: CreateRecentItemCommand{ResourceType: "dashboard", ResourceUID: "uid", Title: "Title", URL: "/%zz"}, err: ErrInvalidURL},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -292,8 +314,9 @@ func TestRecentItemsHandlers(t *testing.T) {
 
 	deleteCtx := requestContext(http.MethodDelete, recentItemsPath+"/"+created.UID, "", signedInUser)
 	setUIDParam(deleteCtx, created.UID)
-	require.Equal(t, http.StatusNoContent, service.deleteHandler(deleteCtx).Status())
-	require.Empty(t, service.deleteHandler(deleteCtx).Body())
+	deleteResponse := service.deleteHandler(deleteCtx)
+	require.Equal(t, http.StatusNoContent, deleteResponse.Status())
+	require.Empty(t, deleteResponse.Body())
 	require.Equal(t, http.StatusNotFound, service.deleteHandler(deleteCtx).Status())
 }
 
@@ -313,6 +336,31 @@ func TestRecentItemErrorMapping(t *testing.T) {
 	} {
 		require.Equal(t, tt.status, recentItemError("operation failed", tt.err).Status())
 	}
+}
+
+func TestRecentItemsHandlersReturnInternalErrors(t *testing.T) {
+	expectedErr := errors.New("database unavailable")
+	service := &RecentItemsService{
+		store: &dbtest.FakeDB{ExpectedError: expectedErr},
+		now:   time.Now,
+	}
+	signedInUser := &user.SignedInUser{OrgID: 1, UserID: 1}
+
+	require.Equal(t, http.StatusInternalServerError, service.createHandler(requestContext(
+		http.MethodPost,
+		recentItemsPath,
+		`{"resourceType":"dashboard","resourceUid":"uid","title":"Title","url":"/d/uid"}`,
+		signedInUser,
+	)).Status())
+	require.Equal(t, http.StatusInternalServerError, service.listHandler(requestContext(http.MethodGet, recentItemsPath, "", signedInUser)).Status())
+
+	patchCtx := requestContext(http.MethodPatch, recentItemsPath+"/validuid", `{"title":"Title"}`, signedInUser)
+	setUIDParam(patchCtx, "validuid")
+	require.Equal(t, http.StatusInternalServerError, service.patchHandler(patchCtx).Status())
+
+	deleteCtx := requestContext(http.MethodDelete, recentItemsPath+"/validuid", "", signedInUser)
+	setUIDParam(deleteCtx, "validuid")
+	require.Equal(t, http.StatusInternalServerError, service.deleteHandler(deleteCtx).Status())
 }
 
 func newTestService(t *testing.T) (*RecentItemsService, *user.SignedInUser) {
