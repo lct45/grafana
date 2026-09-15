@@ -76,6 +76,8 @@ function getTranslatedThemeName(theme: ThemeRegistryItem) {
       return t('shared.preferences.theme.light-label', 'Light');
     case 'system':
       return t('shared.preferences.theme.system-label', 'System preference');
+    case 'sandstone':
+      return t('shared.preferences.theme.sandstone-label', 'Sandstone');
     default:
       return theme.name;
   }

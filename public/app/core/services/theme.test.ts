@@ -50,6 +50,12 @@ describe('changeTheme', () => {
       expect(backendSrv.patch).toHaveBeenCalledWith('/api/user/preferences', { theme: 'light' });
       expect(preferencesAPI.endpoints.updatePreferences.initiate).not.toHaveBeenCalled();
     });
+
+    it('persists Sandstone via the legacy preferences API', async () => {
+      await changeTheme('sandstone', false);
+      expect(backendSrv.patch).toHaveBeenCalledWith('/api/user/preferences', { theme: 'sandstone' });
+      expect(preferencesAPI.endpoints.updatePreferences.initiate).not.toHaveBeenCalled();
+    });
   });
 
   describe('when the newPreferencesPage flag is on', () => {
@@ -62,6 +68,15 @@ describe('changeTheme', () => {
       expect(preferencesAPI.endpoints.updatePreferences.initiate).toHaveBeenCalledWith({
         name: 'user-abc123',
         patch: { spec: { theme: 'light' } },
+      });
+      expect(backendSrv.patch).not.toHaveBeenCalled();
+    });
+
+    it('persists Sandstone to the user resource via the k8s preferences API', async () => {
+      await changeTheme('sandstone', false);
+      expect(preferencesAPI.endpoints.updatePreferences.initiate).toHaveBeenCalledWith({
+        name: 'user-abc123',
+        patch: { spec: { theme: 'sandstone' } },
       });
       expect(backendSrv.patch).not.toHaveBeenCalled();
     });
