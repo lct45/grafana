@@ -40,8 +40,11 @@ describe('SaveExploreBookmarkModal', () => {
       <SaveExploreBookmarkModal isOpen isSaving={false} canSave onClose={onClose} onSave={onSave} />
     );
 
-    const input = screen.getByPlaceholderText('e.g. CPU usage last 6 hours');
+    const input = screen.getByRole('textbox');
+    await user.clear(input);
     await user.type(input, 'Saved bookmark');
+    expect(input).toHaveValue('Saved bookmark');
+
     await user.click(screen.getByRole('button', { name: 'Save' }));
 
     await waitFor(() => {
@@ -55,7 +58,7 @@ describe('SaveExploreBookmarkModal', () => {
     rerender(<SaveExploreBookmarkModal isOpen isSaving={false} canSave onClose={onClose} onSave={onSave} />);
 
     await waitFor(() => {
-      expect(screen.getByPlaceholderText('e.g. CPU usage last 6 hours')).toHaveValue('');
+      expect(screen.getByRole('textbox')).toHaveValue('');
     });
   });
 });
