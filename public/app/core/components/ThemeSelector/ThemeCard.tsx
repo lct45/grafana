@@ -76,6 +76,8 @@ function getTranslatedThemeName(theme: ThemeRegistryItem) {
       return t('shared.preferences.theme.light-label', 'Light');
     case 'system':
       return t('shared.preferences.theme.system-label', 'System preference');
+    case 'cottoncandy':
+      return t('shared.preferences.theme.cotton-candy-label', 'Cotton Candy');
     default:
       return theme.name;
   }

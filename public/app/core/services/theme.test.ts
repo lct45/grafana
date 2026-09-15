@@ -50,6 +50,12 @@ describe('changeTheme', () => {
       expect(backendSrv.patch).toHaveBeenCalledWith('/api/user/preferences', { theme: 'light' });
       expect(preferencesAPI.endpoints.updatePreferences.initiate).not.toHaveBeenCalled();
     });
+
+    it('persists Cotton Candy via the legacy preferences API', async () => {
+      await changeTheme('cottoncandy', false);
+      expect(backendSrv.patch).toHaveBeenCalledWith('/api/user/preferences', { theme: 'cottoncandy' });
+      expect(preferencesAPI.endpoints.updatePreferences.initiate).not.toHaveBeenCalled();
+    });
   });
 
   describe('when the newPreferencesPage flag is on', () => {
@@ -62,6 +68,15 @@ describe('changeTheme', () => {
       expect(preferencesAPI.endpoints.updatePreferences.initiate).toHaveBeenCalledWith({
         name: 'user-abc123',
         patch: { spec: { theme: 'light' } },
+      });
+      expect(backendSrv.patch).not.toHaveBeenCalled();
+    });
+
+    it('persists Cotton Candy to the user resource via the k8s preferences API', async () => {
+      await changeTheme('cottoncandy', false);
+      expect(preferencesAPI.endpoints.updatePreferences.initiate).toHaveBeenCalledWith({
+        name: 'user-abc123',
+        patch: { spec: { theme: 'cottoncandy' } },
       });
       expect(backendSrv.patch).not.toHaveBeenCalled();
     });

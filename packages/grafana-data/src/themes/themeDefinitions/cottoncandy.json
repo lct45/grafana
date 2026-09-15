@@ -1,0 +1,159 @@
+{
+  "name": "Cotton Candy",
+  "id": "cottoncandy",
+  "colors": {
+    "mode": "light",
+    "border": {
+      "weak": "rgba(255, 79, 160, 0.18)",
+      "medium": "rgba(78, 181, 255, 0.32)",
+      "strong": "rgba(75, 35, 84, 0.28)"
+    },
+    "text": {
+      "primary": "#4B2354",
+      "secondary": "#6E4A78",
+      "disabled": "rgba(75, 35, 84, 0.45)",
+      "link": "#FF2E92",
+      "maxContrast": "#2A1030"
+    },
+    "primary": {
+      "main": "#FF4FA0",
+      "text": "#E8328A",
+      "border": "#E8328A",
+      "name": "primary",
+      "shade": "#E8328A",
+      "transparent": "#FF4FA026",
+      "contrastText": "#FFFFFF",
+      "borderTransparent": "#FF4FA040"
+    },
+    "secondary": {
+      "main": "#FFFFFF",
+      "text": "#6E4A78",
+      "border": "#C9B4F0",
+      "name": "secondary",
+      "shade": "#F0E4FF",
+      "transparent": "#FFFFFF26",
+      "contrastText": "#4B2354",
+      "borderTransparent": "#FFFFFF40"
+    },
+    "accent": {
+      "main": "#4EB5FF",
+      "text": "#1E8FE0",
+      "border": "#1E8FE0",
+      "name": "accent",
+      "shade": "#1E8FE0",
+      "transparent": "#4EB5FF26",
+      "contrastText": "#FFFFFF",
+      "borderTransparent": "#4EB5FF40"
+    },
+    "info": {
+      "main": "#4EB5FF"
+    },
+    "success": {
+      "main": "#3ECF9A"
+    },
+    "warning": {
+      "main": "#FFC247"
+    },
+    "error": {
+      "main": "#FF5C8A"
+    },
+    "background": {
+      "canvas": "#FFD6EC",
+      "page": "#E6F3FF",
+      "primary": "#FFF5FB",
+      "secondary": "#F0E4FF",
+      "elevated": "#FFFFFF"
+    },
+    "action": {
+      "hover": "rgba(255, 79, 160, 0.12)",
+      "selected": "rgba(78, 181, 255, 0.22)",
+      "selectedBorder": "#FF4FA0",
+      "focus": "rgba(255, 79, 160, 0.28)",
+      "hoverOpacity": 0.1,
+      "disabledText": "rgba(110, 74, 120, 0.5)",
+      "disabledBackground": "rgba(255, 79, 160, 0.08)",
+      "disabledOpacity": 0.38
+    },
+    "gradients": {
+      "brandHorizontal": "linear-gradient(270deg, #FF4FA0 0%, #4EB5FF 100%)",
+      "brandVertical": "linear-gradient(0deg, #FF4FA0 0%, #4EB5FF 100%)"
+    },
+    "contrastThreshold": 3,
+    "hoverFactor": 0.04,
+    "tonalOffset": 0.12
+  },
+  "typography": {
+    "fontFamily": "'Trebuchet MS', 'Verdana', 'Geneva', sans-serif",
+    "fontFamilyMonospace": "'Courier New', 'Courier', monospace",
+    "fontSize": 16,
+    "fontWeightLight": 300,
+    "fontWeightRegular": 400,
+    "fontWeightMedium": 600,
+    "fontWeightBold": 700
+  },
+  "shape": {
+    "borderRadiusSm": 10,
+    "borderRadius": 16,
+    "borderRadiusLg": 24
+  },
+  "shadows": {
+    "z1": "0px 1px 4px rgba(255, 79, 160, 0.22)",
+    "z2": "0px 6px 16px rgba(255, 79, 160, 0.24)",
+    "z3": "0px 12px 32px rgba(78, 181, 255, 0.28)"
+  },
+  "spacing": {
+    "gridSize": 9
+  },
+  "visualization": {
+    "palette": [
+      "#FF4FA0",
+      "#4EB5FF",
+      "#C084FC",
+      "#3ECF9A",
+      "#FFC247",
+      "#FF7AD9",
+      "#7ED0FF",
+      "#B388FF",
+      "#5EEAD4",
+      "#FF9F7A"
+    ]
+  },
+  "components": {
+    "panel": {
+      "borderColor": "rgba(255, 79, 160, 0.28)",
+      "boxShadow": "0px 6px 16px rgba(255, 79, 160, 0.16)",
+      "background": "#FFF5FB"
+    },
+    "dashboard": {
+      "background": "#FFD6EC"
+    },
+    "tooltip": {
+      "text": "#4B2354",
+      "background": "#FFFFFF"
+    },
+    "menu": {
+      "borderRadius": "pill",
+      "padding": 1
+    },
+    "textHighlight": {
+      "background": "#FFB3DA",
+      "text": "#4B2354"
+    },
+    "table": {
+      "rowHoverBackground": "rgba(255, 79, 160, 0.08)",
+      "rowSelected": "rgba(78, 181, 255, 0.18)"
+    },
+    "tag": {
+      "colors": [
+        { "background": "#FF4FA0", "text": "#FFFFFF" },
+        { "background": "#4EB5FF", "text": "#14324A" },
+        { "background": "#C084FC", "text": "#FFFFFF" },
+        { "background": "#3ECF9A", "text": "#14332A" },
+        { "background": "#FFC247", "text": "#4B2354" },
+        { "background": "#FF7AD9", "text": "#4B2354" },
+        { "background": "#7ED0FF", "text": "#14324A" },
+        { "background": "#B388FF", "text": "#FFFFFF" }
+      ]
+    }
+  }
+}

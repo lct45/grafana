@@ -2,6 +2,7 @@ import { Registry, type RegistryItem } from '../utils/Registry';
 
 import { createTheme, NewThemeOptionsSchema } from './createTheme';
 import aubergine from './themeDefinitions/aubergine.json';
+import cottoncandy from './themeDefinitions/cottoncandy.json';
 import debug from './themeDefinitions/debug.json';
 import desertbloom from './themeDefinitions/desertbloom.json';
 import deut_prot_dark from './themeDefinitions/deut_prot_dark.json';
@@ -20,6 +21,8 @@ import visual_refresh_dark from './themeDefinitions/visual_refresh_dark.json';
 import visual_refresh_light from './themeDefinitions/visual_refresh_light.json';
 import zen from './themeDefinitions/zen.json';
 import { type GrafanaTheme2 } from './types';
+
+const cottonCandyTheme = NewThemeOptionsSchema.parse(cottoncandy);
 
 export interface ThemeRegistryItem extends RegistryItem {
   isExtra?: boolean;
@@ -85,6 +88,7 @@ const themeRegistry = new Registry<ThemeRegistryItem>(() => {
     { id: 'system', name: 'System preference', build: getSystemPreferenceTheme },
     { id: 'dark', name: 'Dark', build: () => createTheme({ colors: { mode: 'dark' } }) },
     { id: 'light', name: 'Light', build: () => createTheme({ colors: { mode: 'light' } }) },
+    { id: 'cottoncandy', name: 'Cotton Candy', build: () => createTheme(cottonCandyTheme) },
   ];
 });
 

@@ -32,4 +32,28 @@ describe('ThemeCard', () => {
     // Check that onSelect was called only once
     expect(onSelectMock).toHaveBeenCalledTimes(1);
   });
+
+  it('renders the Cotton Candy theme label', () => {
+    const cottonCandyTheme: ThemeRegistryItem = {
+      id: 'cottoncandy',
+      name: 'Cotton Candy',
+      build: () => createTheme({ colors: { mode: 'light' } }),
+    };
+
+    render(<ThemeCard themeOption={cottonCandyTheme} onSelect={jest.fn()} isSelected={false} />);
+
+    expect(screen.getByRole('radio', { name: 'Cotton Candy' })).toBeInTheDocument();
+  });
+
+  it('does not show an experimental badge for Cotton Candy', () => {
+    const cottonCandyTheme: ThemeRegistryItem = {
+      id: 'cottoncandy',
+      name: 'Cotton Candy',
+      build: () => createTheme({ colors: { mode: 'light' } }),
+    };
+
+    render(<ThemeCard themeOption={cottonCandyTheme} onSelect={jest.fn()} isSelected={false} />);
+
+    expect(screen.queryByText(/experimental/i)).not.toBeInTheDocument();
+  });
 });

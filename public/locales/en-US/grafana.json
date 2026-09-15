@@ -14849,6 +14849,7 @@
   "shared": {
     "preferences": {
       "theme": {
+        "cotton-candy-label": "Cotton Candy",
         "dark-label": "Dark",
         "light-label": "Light",
         "system-label": "System preference"
