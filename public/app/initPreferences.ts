@@ -17,7 +17,7 @@ export const initPreferences = async () => {
 
   if (themeWithOverride !== undefined) {
     window.grafanaBootData.user.theme = themeWithOverride;
-    applyTheme(themeWithOverride);
+    await applyTheme(themeWithOverride);
   }
   if (languageWithOverride !== undefined) {
     window.grafanaBootData.user.language = languageWithOverride;
@@ -55,9 +55,12 @@ export async function fetchMergedPreferences(): Promise<{ spec: PreferencesSpec 
 // Mirrors the DOM theme application from the inline boot script in index.html,
 // but using the merged-preferences value. Updates lightTheme, the <body> class,
 // and the theme stylesheet <link href>.
-function applyTheme(theme: string) {
-  const isLightTheme =
-    theme === 'system' ? !window.matchMedia('(prefers-color-scheme: dark)').matches : theme === 'light';
+async function applyTheme(theme: string) {
+  // Resolve lightness from the theme registry so first-class light themes
+  // (e.g. Sandstone) get the light stylesheet — not only the id "light".
+  // Imported lazily so @grafana/data import-time side effects don't run before boot data is ready.
+  const { getThemeById } = await import(/* webpackMode: "eager" */ '@grafana/data/internal');
+  const isLightTheme = getThemeById(theme).isLight;
 
   window.grafanaBootData.user.lightTheme = isLightTheme;
 

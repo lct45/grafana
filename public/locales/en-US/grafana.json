@@ -14851,6 +14851,7 @@
       "theme": {
         "dark-label": "Dark",
         "light-label": "Light",
+        "sandstone-label": "Sandstone",
         "system-label": "System preference"
       }
     }

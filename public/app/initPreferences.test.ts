@@ -199,6 +199,28 @@ describe('applyTheme', () => {
   });
 
   it.each([
+    { theme: 'sandstone', expectedClass: 'theme-light', otherClass: 'theme-dark', expectedHref: 'light.css' },
+    { theme: 'dark', expectedClass: 'theme-dark', otherClass: 'theme-light', expectedHref: 'dark.css' },
+  ])(
+    'resolves lightness from the theme registry for theme "$theme"',
+    async ({ theme, expectedClass, otherClass, expectedHref }) => {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = expectedHref === 'light.css' ? 'dark.css' : 'light.css';
+      document.head.appendChild(link);
+
+      server.use(http.get(PREFERENCES_URL, () => HttpResponse.json({ spec: { theme } })));
+
+      await initPreferences();
+
+      expect(window.grafanaBootData.user.lightTheme).toBe(expectedClass === 'theme-light');
+      expect(document.body.classList.contains(expectedClass)).toBe(true);
+      expect(document.body.classList.contains(otherClass)).toBe(false);
+      expect(link.getAttribute('href')).toBe(expectedHref);
+    }
+  );
+
+  it.each([
     { prefersDark: true, expectedClass: 'theme-dark', otherClass: 'theme-light' },
     { prefersDark: false, expectedClass: 'theme-light', otherClass: 'theme-dark' },
   ])(
