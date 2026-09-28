@@ -157,6 +157,25 @@ func TestCreateRecentItem(t *testing.T) {
 		require.NoError(t, json.Unmarshal(listResp.Body(), &list))
 		require.Len(t, list.RecentItems, 2)
 	})
+
+	testScenario(t, "concurrent first views of the same resource succeed", func(t *testing.T, sc scenarioContext) {
+		cmd := itemCommand("dashboard", "dashuid", "CPU")
+		errCh := make(chan error, 2)
+		for i := 0; i < 2; i++ {
+			go func() {
+				_, _, err := sc.service.Record(context.Background(), sc.reqContext.SignedInUser, cmd)
+				errCh <- err
+			}()
+		}
+		require.NoError(t, <-errCh)
+		require.NoError(t, <-errCh)
+
+		setQuery(sc, "limit=100")
+		listResp := sc.service.ListHandler(sc.reqContext)
+		var list ListRecentItemsResponse
+		require.NoError(t, json.Unmarshal(listResp.Body(), &list))
+		require.Len(t, list.RecentItems, 1)
+	})
 }
 
 func TestCreateRecentItemValidation(t *testing.T) {
@@ -172,6 +191,8 @@ func TestCreateRecentItemValidation(t *testing.T) {
 		{name: "empty title", body: itemCommand("dashboard", "dashuid", "   ")},
 		{name: "external url", body: CreateRecentItemCommand{ResourceType: "dashboard", ResourceUID: "dashuid", Title: "CPU", URL: "https://example.com/d"}},
 		{name: "protocol relative url", body: CreateRecentItemCommand{ResourceType: "dashboard", ResourceUID: "dashuid", Title: "CPU", URL: "//example.com/d"}},
+		{name: "backslash protocol relative url", body: CreateRecentItemCommand{ResourceType: "dashboard", ResourceUID: "dashuid", Title: "CPU", URL: `/\evil.com`}},
+		{name: "double backslash protocol relative url", body: CreateRecentItemCommand{ResourceType: "dashboard", ResourceUID: "dashuid", Title: "CPU", URL: `/\\evil.com`}},
 		{name: "title too long", body: itemCommand("dashboard", "dashuid", strings.Repeat("a", 256))},
 	}
 

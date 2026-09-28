@@ -13,6 +13,16 @@ type sqlItemStore struct {
 }
 
 func (s *sqlItemStore) record(ctx context.Context, usr *user.SignedInUser, cmd CreateRecentItemCommand, viewedAt int64) (RecentItemDTO, bool, error) {
+	dto, created, err := s.recordTx(ctx, usr, cmd, viewedAt)
+	if err != nil && s.db.GetDialect().IsUniqueConstraintViolation(err) {
+		// PostgreSQL aborts the transaction after a unique-constraint error,
+		// so retry in a new session now that the other writer has committed.
+		return s.recordTx(ctx, usr, cmd, viewedAt)
+	}
+	return dto, created, err
+}
+
+func (s *sqlItemStore) recordTx(ctx context.Context, usr *user.SignedInUser, cmd CreateRecentItemCommand, viewedAt int64) (RecentItemDTO, bool, error) {
 	var (
 		dto     RecentItemDTO
 		created bool
@@ -46,26 +56,7 @@ func (s *sqlItemStore) record(ctx context.Context, usr *user.SignedInUser, cmd C
 			LastViewedAt: viewedAt,
 		}
 		if _, err = sess.Insert(&item); err != nil {
-			if !s.db.GetDialect().IsUniqueConstraintViolation(err) {
-				return err
-			}
-			insertErr := err
-			existing, found, err = getByResource(sess, usr, cmd.ResourceType, cmd.ResourceUID)
-			if err != nil {
-				return err
-			}
-			if !found {
-				return insertErr
-			}
-			existing.Title = cmd.Title
-			existing.URL = cmd.URL
-			existing.LastViewedAt = viewedAt
-			if _, err = sess.ID(existing.ID).Cols("title", "url", "last_viewed_at").Update(&existing); err != nil {
-				return err
-			}
-			dto = toDTO(existing)
-			created = false
-			return nil
+			return err
 		}
 
 		if err = pruneOldest(sess, usr); err != nil {
@@ -158,16 +149,17 @@ func pruneOldest(sess *db.Session, usr *user.SignedInUser) error {
 	var items []UserRecentItem
 	err := sess.Where("org_id = ? AND user_id = ?", usr.OrgID, usr.UserID).
 		Desc("last_viewed_at", "id").
+		Limit(maxRecentItemsPerUser, maxRecentItemsPerUser).
 		Find(&items)
 	if err != nil {
 		return err
 	}
-	if len(items) <= maxRecentItemsPerUser {
+	if len(items) == 0 {
 		return nil
 	}
 
-	stale := make([]int64, 0, len(items)-maxRecentItemsPerUser)
-	for _, item := range items[maxRecentItemsPerUser:] {
+	stale := make([]int64, 0, len(items))
+	for _, item := range items {
 		stale = append(stale, item.ID)
 	}
 	_, err = sess.Where("org_id = ? AND user_id = ?", usr.OrgID, usr.UserID).In("id", stale).Delete(&UserRecentItem{})

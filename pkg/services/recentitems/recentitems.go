@@ -133,7 +133,8 @@ func normalizeURL(rawURL string) (string, error) {
 	if len(rawURL) > maxURLLength {
 		return "", invalid("url must be at most 1024 characters")
 	}
-	if !strings.HasPrefix(rawURL, "/") || strings.HasPrefix(rawURL, "//") || strings.Contains(rawURL, "://") {
+	// Browsers treat \ as / in hrefs, so /\evil.com becomes //evil.com.
+	if strings.Contains(rawURL, `\`) || !strings.HasPrefix(rawURL, "/") || strings.HasPrefix(rawURL, "//") || strings.Contains(rawURL, "://") {
 		return "", invalid("url must be a relative path")
 	}
 	return rawURL, nil
