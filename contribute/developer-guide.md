@@ -281,6 +281,37 @@ Enable the development mode by adding the following line in your `custom.ini`:
 app_mode = development
 ```
 
+### Use PostgreSQL instead of SQLite
+
+By default Grafana stores its own data (users, dashboards, data sources) in an embedded SQLite database. SQLite is fine for local development but isn't recommended for production, so it's useful to run against PostgreSQL when you work on database-related code or want a production-like setup.
+
+Start the PostgreSQL devenv block (requires Docker), then run the backend with `make run-postgres` instead of `make run`:
+
+```bash
+make devenv sources=postgres
+make run-postgres
+```
+
+`run-postgres` sets the `GF_DATABASE_*` environment variables to match the block's credentials (`grafana`/`password`, database `grafana`, `localhost:5432`, `ssl_mode=disable`). On first start Grafana runs all schema migrations against the empty database, so a clean start works end-to-end. Override any value on the command line to point at another server, for example:
+
+```bash
+make run-postgres GF_DATABASE_HOST=db.example.com:5432 GF_DATABASE_SSL_MODE=require
+```
+
+If you prefer configuration files, the equivalent `custom.ini` is:
+
+```ini
+[database]
+type = postgres
+host = localhost:5432
+name = grafana
+user = grafana
+password = password
+ssl_mode = disable
+```
+
+Note that existing SQLite data isn't migrated automatically. Grafana doesn't ship a cross-database data migration tool, so either start clean or re-provision dashboards and data sources (for example with `devenv/setup.sh`).
+
 ### Add data sources
 
 By now, you should be able to build and test a change you've made to the Grafana source code. In most cases, you'll need to add at least one data source to verify the change.
