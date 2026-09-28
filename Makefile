@@ -518,6 +518,23 @@ $(MSI_FILE): $(TARGZ_FILE)
 run: ## Build and run backend, and watch for changes. See .air.toml for configuration.
 	$(air) -c .air.toml
 
+# Defaults match the credentials in devenv/docker/blocks/postgres/docker-compose.yaml.
+GF_DATABASE_HOST ?= localhost:5432
+GF_DATABASE_NAME ?= grafana
+GF_DATABASE_USER ?= grafana
+GF_DATABASE_PASSWORD ?= password
+GF_DATABASE_SSL_MODE ?= disable
+
+.PHONY: run-postgres
+run-postgres: ## Same as `run`, but use the devenv Postgres block (`make devenv sources=postgres`) instead of SQLite.
+	GF_DATABASE_TYPE=postgres \
+	GF_DATABASE_HOST=$(GF_DATABASE_HOST) \
+	GF_DATABASE_NAME=$(GF_DATABASE_NAME) \
+	GF_DATABASE_USER=$(GF_DATABASE_USER) \
+	GF_DATABASE_PASSWORD=$(GF_DATABASE_PASSWORD) \
+	GF_DATABASE_SSL_MODE=$(GF_DATABASE_SSL_MODE) \
+	$(air) -c .air.toml
+
 .PHONY: run-go
 run-go: ## Build and run web server immediately.
 	$(GO) run -race $(if $(GO_BUILD_TAGS),-build-tags=$(GO_BUILD_TAGS)) \
