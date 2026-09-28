@@ -299,6 +299,11 @@ func (hs *HTTPServer) registerRoutes() {
 			userRoute.Post("/stars/dashboard/uid/:uid", routing.Wrap(hs.starApi.StarDashboardByUID))
 			userRoute.Delete("/stars/dashboard/uid/:uid", routing.Wrap(hs.starApi.UnstarDashboardByUID))
 
+			userRoute.Post("/RECENT_ITEMS", routing.Wrap(hs.RecentItemsService.CreateHandler))
+			userRoute.Get("/RECENT_ITEMS", routing.Wrap(hs.RecentItemsService.ListHandler))
+			userRoute.Patch("/RECENT_ITEMS/:uid", routing.Wrap(hs.RecentItemsService.PatchHandler))
+			userRoute.Delete("/RECENT_ITEMS/:uid", routing.Wrap(hs.RecentItemsService.DeleteHandler))
+
 			userRoute.Put("/password", routing.Wrap(hs.ChangeUserPassword))
 			userRoute.Get("/quotas", routing.Wrap(hs.GetUserQuotas))
 			userRoute.Get("/preferences", routing.Wrap(hs.GetUserPreferences))
